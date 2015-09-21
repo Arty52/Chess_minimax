@@ -120,7 +120,6 @@ def alphabeta(position, depth, alpha, beta):
 def main(argv):
 
 	print("\nWelcome to ChessPlayer")
-	print("Created by Austin White Fall 2014 California State University, Fullerton")
 
 	DEBUG = True
 	
