@@ -1,18 +1,19 @@
 import numpy
+import sys
+
 from Board import Board
 
 GAME_STATES = []
 
-def importBoard():
-    """" testcase: x.K(5,6), x.R(8,5), y.K(6,8) """
-    
+def importBoard():    
     try:
         with open('testcase1.txt') as fh:
             if fh:
                 print('reading file')
                 for i in fh:
                     line = i
-                    GAME_STATES.append(line)
+                    # extract only integers from line
+                    GAME_STATES.append([int(s) for s in line if s.isdigit()])
 
     except FileNotFoundError:
         print()
@@ -22,9 +23,17 @@ def importBoard():
 def playCase():
     for line in GAME_STATES:
         board = Board()
-        board.addPiece('white', 'King', int(line[4])-1, int(line[6])-1)
-        board.addPiece('white', 'Rook', int(line[14])-1, int(line[16])-1)
-        board.addPiece('black', 'King', int(line[24])-1, int(line[26])-1)
+        try:
+            board.addPiece('white', 'King', int(line[0])-1, int(line[1])-1)
+            board.addPiece('white', 'Rook', int(line[2])-1, int(line[3])-1)
+            board.addPiece('black', 'King', int(line[4])-1, int(line[5])-1)
+        except ValueError:
+            print()
+            print('Your file is not formatted correctly, refer to documentation for more information')
+            print('Program will now exit.')
+            print()
+            sys.exit()
+            
         solve_game(board)
 
 
