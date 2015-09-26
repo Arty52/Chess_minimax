@@ -50,8 +50,38 @@ def printCol(colVal):
 def solve_game(board):
 
     print(board)
-    moves = board.legalMoves('black')
-    print(len(moves))
+    wMoves = board.legalMoves('white')
+    bMoves = board.legalMoves('black')
+    #print(len(moves))
+
+    #Empty lists for appending moves
+    wRookMoves = []
+    wKingMoves = []
+    bKingMoves = []
+
+    #loop to go through all the legal white piece moves
+    #   appends those moves to the correct list
+    for i in wMoves:
+        #i[x] let's me parse through the tuples within the list
+        if i[0] == 'Rook':
+            wRookMoves.append( (i[1],i[2]) )
+        elif i[0] == 'King':
+            wKingMoves.append( (i[1],i[2]) )
+
+    for i in bMoves:
+        bKingMoves.append( (i[1],i[2]) )
+
+    #Just used to check if all the moves were put in
+##    print("White Rook Moves:")
+##    for j in wRookMoves:
+##        print(j)
+##    print("White King Moves:")
+##    for j in wKingMoves:
+##        print(j)
+##    print("Black King Moves:")
+##    for j in bKingMoves:
+##        print(j)
+
     # board.setup()
     # print(board)
     # pieces = board.saveState()
