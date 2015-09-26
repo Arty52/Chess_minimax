@@ -103,7 +103,21 @@ class Board:
         for loc, square in self.squares.items():
             if square.isOccupied() and square.getPiece().isAlive() and square.getPiece().isColor(color):
                 for move in square.generateMoves():
-                    moves.append( (square, move) )
+                    ##original return method
+                    #moves.append( (square, move) )
+
+                    ##method that returns (from row, from column, to row, to column) 
+                    #moves.append( (square.getRow(),square.getColumn(),move.getRow(),move.getColumn()) )
+
+                    ##method that returns (Color, Piece, to row, to column)
+                    #moves.append( (square.getPiece().getColor(),square.getPiece().getType(), move.getRow(), move.getColumn()) )
+
+                    ##method that returns (Piece, to row, to column)
+                    moves.append( (square.getPiece().getType(), move.getRow(), move.getColumn()) )
+
+
+                    ##method that returns (Color, Piece, to row, to column)
+                    #moves.append( (move.getRow(), move.getColumn()) )
 
         return moves
 
@@ -179,7 +193,12 @@ class Board:
     def oppositeColor(color):
         return 'black' if color == 'white' else 'white'
 
+
     def __str__(self):
+##        return self.getPieceSquare('white','King')
+##        return self.getPieceSquare('white','Rook')
+##        return self.getPieceSquare('black','King')
+
         columnDisplay = '  %s  ' * 8 % tuple( [ Square.indexColumn(c) for c in list(range(8)) ] )
         boardDisplay = "  %s\n" % (columnDisplay,)
         boardDisplay += '  ' + '-' * len(columnDisplay) + "\n"
