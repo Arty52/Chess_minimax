@@ -50,8 +50,8 @@ def printCol(colVal):
 def solve_game(board):
 
     print(board)
-    wMoves = board.legalMoves('white')
-    bMoves = board.legalMoves('black')
+    wMoves = board.getLegalMoves('white')
+    bMoves = board.getLegalMoves('black')
     #print(len(moves))
 
     #Empty lists for appending moves
@@ -72,15 +72,15 @@ def solve_game(board):
         bKingMoves.append( (i[1],i[2]) )
 
     #Just used to check if all the moves were put in
-##    print("White Rook Moves:")
-##    for j in wRookMoves:
-##        print(j)
-##    print("White King Moves:")
-##    for j in wKingMoves:
-##        print(j)
-##    print("Black King Moves:")
-##    for j in bKingMoves:
-##        print(j)
+    print("White Rook Moves:")
+    for j in wRookMoves:
+        print(j)
+    print("White King Moves:")
+    for j in wKingMoves:
+        print(j)
+    print("Black King Moves:")
+    for j in bKingMoves:
+        print(j)
 
     # board.setup()
     # print(board)

@@ -104,6 +104,24 @@ class Board:
             if square.isOccupied() and square.getPiece().isAlive() and square.getPiece().isColor(color):
                 for move in square.generateMoves():
                     ##original return method
+                    moves.append( (square, move) )
+
+        return moves
+
+    def getLegalMoves(self, color):
+        '''
+        Generate all legal moves for the specified color.
+        Returns a list of tuples (from, to)
+        :type color: str
+        :return: [(Square, Square)]
+        '''
+
+        moves = []
+
+        for loc, square in self.squares.items():
+            if square.isOccupied() and square.getPiece().isAlive() and square.getPiece().isColor(color):
+                for move in square.generateMoves():
+                    ##original return method
                     #moves.append( (square, move) )
 
                     ##method that returns (from row, from column, to row, to column) 
