@@ -1,39 +1,51 @@
-from copy import deepcopy
+from Board import Board
 
+def heuristicWhite(board, depth, alpha, beta):
+    """Returns a tuple (score, bestMove) for the position at the given depth"""
+    color = 'white'
 
-class Minimax(object):
-    def __init__(self, color):
-        self.color = color
+    if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
+        print('base case white')
+        return (board.evaluate(color), None)
+    else:
+        print('Evaluating white else...')
+        bestMove = None
+        best_score = 0
+        for move in board.legalMoves(color):
+            print('white move: {}{}'.format(move[0], move[1]))
+            board.movePiece(move[0], move[1])
+            if depth - 1 > 0:
+                score, move = heuristicBlack(board, depth - 1, alpha, beta)
+            # if score > best_score:
+            bestMove = move
+            # if score > alpha: # white maximizes her score
+            #     alpha = score
+            #     bestMove = move
+                # if alpha >= beta: # alpha-beta cutoff
+                #     break
+        return (alpha, bestMove)
 
-    def minimax(self, state):
-        """Initiates a minimax search on the current game state."""
-        return max(
-            map(lambda move: (move, -self.mmax(self.next_state(state, move))),
-                state.get_available_moves()),
-            key=lambda x: x[1])
+def heuristicBlack(board, depth, alpha, beta):
+    """Returns a tuple (score, bestMove) for the position at the given depth"""
+    color = 'black'
 
-    def mmax(self, state):
-        """
-        Maximizes the score against all of the next positions available
-        for a specified game state.
-        """
-        if state.check_gameover():
-            return self.evaluate(state)
-        return max(
-            map(lambda move: -self.mmax(self.next_state(state, move)),
-                state.get_available_moves()))
+    if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
+        print('base case black')
+        return (board.evaluate(color), None)
+    else:
+        print('Evaluating black else...')
+        bestMove = None
+        best_score = 0
+        for move in board.legalMoves(color):
+            print('black move: {}{}'.format(move[0], move[1]))
+            board.movePiece(move[0], move[1])
+            if depth - 1 > 0:
+                score, move = heuristicWhite(board, depth - 1, alpha, beta)
 
-    def evaluate(self, state):
-        """Evaluates the state of a position for the configured player."""
-        return float('inf') if state.winner == self.color else float('-inf')
-
-    def next_state(self, state, move):
-        """Returns the next state of the game given a current state and a move.
-        Keyword arguments:
-        state -- the current state of the game
-        move -- the move to apply
-        """
-        clone = deepcopy(state)
-        clone.make_move(move)
-        clone.alternate_turn()
-        return clone
+            bestMove = move
+            # if score < beta: # black minimizes his score
+            #     beta = score
+            #     bestMove = move
+                # if alpha >= beta: # alpha-beta cutoff
+                #     break
+        return (beta, bestMove)

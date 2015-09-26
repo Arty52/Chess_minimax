@@ -1,6 +1,7 @@
 import numpy
 import sys
 
+from minimax import heuristicWhite
 from Board import Board
 
 GAME_STATES = []
@@ -64,12 +65,12 @@ def solve_game(board):
     for i in wMoves:
         #i[x] let's me parse through the tuples within the list
         if i[0] == 'Rook':
-            wRookMoves.append( (i[1],i[2]) )
+            wRookMoves.append( (i[1]+1,printCol(i[2])) )
         elif i[0] == 'King':
-            wKingMoves.append( (i[1],i[2]) )
+            wKingMoves.append( (i[1]+1,printCol(i[2])) )
 
     for i in bMoves:
-        bKingMoves.append( (i[1],i[2]) )
+        bKingMoves.append( (i[1]+1,printCol(i[2])) )
 
     #Just used to check if all the moves were put in
     print("White Rook Moves:")
@@ -81,7 +82,14 @@ def solve_game(board):
     print("Black King Moves:")
     for j in bKingMoves:
         print(j)
-
+    
+    
+    savedState = board.saveState()
+    score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
+    board.restoreState(savedState)
+    print('Moving: ', move)
+    board.movePiece(move[0], move[1])
+    print(board)
     # board.setup()
     # print(board)
     # pieces = board.saveState()
@@ -89,6 +97,7 @@ def solve_game(board):
     # print(board)
     # board.restoreState(pieces)
     # print(board)
+
 
 
 def main():

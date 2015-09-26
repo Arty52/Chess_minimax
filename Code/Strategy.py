@@ -1,4 +1,4 @@
-class Strategy(object):
+class Strategy:
 
 	ATTACK_KING_BONUS = 5000
 	ATTACK_ROOK_BONUS = 1000
