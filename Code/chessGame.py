@@ -56,7 +56,7 @@ def solve_game(board):
     print(board)
     savedState = board.saveState()
     
-        '''DEEP COPY'''
+    '''DEEP COPY'''
     # save = deepcopy(savedState)
     # print(save)
      
@@ -124,7 +124,7 @@ def solve_game(board):
     # clone.movePiece(moves[0][0],moves[0][1])
     # print(clone)
  
-     '''minimax'''
+    '''minimax'''
     move = minimax(board)
  
  

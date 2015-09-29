@@ -108,10 +108,11 @@ class Board(object):
         piece = fromSquare.getPiece()
         fromSquare.removePiece()
         
-        # for loc, square in self.squares.items():
-        #     if square.isOccupied():
-        #         print('Occupied:')
-        #         print(loc, square)
+        for loc, square in self.squares.items():
+            if square.isOccupied() and square == fromSquare:
+                # print('Occupied:')
+                # print(loc, square)
+                square.removePiece()
             
         # toSquare.assignPiece(piece)
         
@@ -119,6 +120,7 @@ class Board(object):
         print('from: {} {}'.format(piece, fromSquare))
         print('to: {} {}'.format(piece, toSquare))
         self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
+        
 
     def legalMoves(self, color):
         '''
@@ -241,12 +243,12 @@ class Board(object):
     def oppositeColor(color):
         return 'black' if color == 'white' else 'white'
 
-    def __deepcopy__(self, memo = {}):
-        from copy import deepcopy
-        result = self.__class__()
-        memo[id(self)] = result
-        result = self.__class__.__new__()
-        return result
+    # def __deepcopy__(self, memo = {}):
+    #     from copy import deepcopy
+    #     result = self.__class__()
+    #     memo[id(self)] = result
+    #     result = self.__class__.__new__()
+    #     return result
 
     def __str__(self):
 ##        return self.getPieceSquare('white','King')

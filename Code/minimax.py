@@ -10,15 +10,33 @@ def minimax(board):
     best_score = float('-inf')
     for move in moves:
         clone = deepcopy(board)
-        print(clone is board)
-        print('minimax moving from {} to {}'.format(move[0], move[1]))
-        clone.movePiece(move[0], move[1])
-        # print(move[0], move[1])
-        # print(clone)
-        score = min_play(clone, depth - 1)
+        clone.squares = deepcopy(board.squares)
+        step = deepcopy(move)
+        print(move)
+        print('minimax moving from {} to {}'.format(step[0], step[1]))
+        print('board:')
+        print(board)
+        print('clone:')
+        print(clone)
+        for loc, square in clone.squares.items():
+            if square.isOccupied():
+                print(square)
+
+        clone.movePiece(step[0], step[1])
+        for loc, square in clone.squares.items():
+            if square.isOccupied():
+                print(square)
+
+        print('board:')
+        print(board)
+        print('clone:')
+        print(clone)
+        print(move[0], move[1])
+        print(clone)
+        # score = min_play(clone, depth - 1)
         print('returned from min_play')
         if score > best_score:
-            best_move = move
+            best_move = step
             best_score = score
     print('returning from minimax')
     return best_move
@@ -33,8 +51,9 @@ def min_play(board, depth):
     for move in moves:
         print('min_play board:')
         print(board)
-        # clone = deepcopy(board)
-        clone = board
+        clone = deepcopy(board)
+        clone.squares = deepcopy(board.squares)
+        # clone = board
         print('min_play moving from {} to {}'.format(move[0], move[1]))
         clone.movePiece(move[0], move[1])
         print('board:')
@@ -59,8 +78,9 @@ def max_play(board, depth):
     moves = board.legalMoves(color)
     best_score = float('-inf')
     for move in moves:
-        # clone = deepcopy(board)
-        clone = board
+        clone = deepcopy(board)
+        clone.squares = deepcopy(board.squares)
+        # clone = board
         print('max_play moving from {} to {}'.format(move[0], move[1]))
         clone.movePiece(move[0], move[1])
         print(clone)
