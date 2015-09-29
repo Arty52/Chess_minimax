@@ -83,26 +83,17 @@ class Board:
         :return: None
         '''
 
+        '''If toSquare is occupied, capture piece'''
         if toSquare.isOccupied() and toSquare.getPiece().isAlive():
             self.capturedPieces.append(toSquare.getPiece())
 
         piece = fromSquare.getPiece()
         fromSquare.removePiece()
-        
-        for loc, square in self.squares.items():
-            if square.isOccupied():
-                print(square)
-        
-        print('before assign {}'.format(toSquare))
-        # print(toSquare.parsePosition(toSquare))
-        toSquare.assignPiece(piece)
-        print('after assign {}'.format(toSquare))
-        
-        self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
 
-        for loc, square in self.squares.items():
-            if square.isOccupied():
-                print(square)
+        toSquare.assignPiece(piece)
+        
+        # Add piece to the board
+        self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
 
     def legalMoves(self, color):
         '''

@@ -90,11 +90,11 @@ def solve_game(board):
     
     
     savedState = board.saveState()
-    moves = board.legalMoves('white')
-    print('moving from {} to {}'.format(moves[0][0],moves[0][1]))
-    board.movePiece(moves[0][0],moves[0][1])
-    print(board)
-    # move = minimax(board)
+    # moves = board.legalMoves('white')
+#     print('moving from {} to {}'.format(moves[0][0],moves[0][1]))
+#     board.movePiece(moves[0][0],moves[0][1])
+#     print(board)
+    move = minimax(board)
     # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
     board.restoreState(savedState)
     # print('Moving: ', move)
