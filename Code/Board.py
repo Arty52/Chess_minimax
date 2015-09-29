@@ -88,7 +88,21 @@ class Board:
 
         piece = fromSquare.getPiece()
         fromSquare.removePiece()
+        
+        for loc, square in self.squares.items():
+            if square.isOccupied():
+                print(square)
+        
+        print('before assign {}'.format(toSquare))
+        # print(toSquare.parsePosition(toSquare))
         toSquare.assignPiece(piece)
+        print('after assign {}'.format(toSquare))
+        
+        self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
+
+        for loc, square in self.squares.items():
+            if square.isOccupied():
+                print(square)
 
     def legalMoves(self, color):
         '''

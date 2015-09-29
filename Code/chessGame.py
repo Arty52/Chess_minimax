@@ -1,7 +1,8 @@
 import numpy
 import sys
 
-from minimax import heuristicWhite
+from minimax import minimax
+# from minimax import heuristicWhite
 from Board import Board
 
 GAME_STATES = []
@@ -42,6 +43,7 @@ def playCase():
             sys.exit()
             
         solve_game(board)
+        sys.exit()      #run only once
 
 # Takes column value and returns column letter
 def printCol(colVal):
@@ -51,44 +53,52 @@ def printCol(colVal):
 def solve_game(board):
 
     print(board)
-    wMoves = board.getLegalMoves('white')
-    bMoves = board.getLegalMoves('black')
-    #print(len(moves))
-
-    #Empty lists for appending moves
-    wRookMoves = []
-    wKingMoves = []
-    bKingMoves = []
-
-    #loop to go through all the legal white piece moves
-    #   appends those moves to the correct list
-    for i in wMoves:
-        #i[x] let's me parse through the tuples within the list
-        if i[0] == 'Rook':
-            wRookMoves.append( (i[1]+1,printCol(i[2])) )
-        elif i[0] == 'King':
-            wKingMoves.append( (i[1]+1,printCol(i[2])) )
-
-    for i in bMoves:
-        bKingMoves.append( (i[1]+1,printCol(i[2])) )
-
-    #Just used to check if all the moves were put in
-    print("White Rook Moves:")
-    for j in wRookMoves:
-        print(j)
-    print("White King Moves:")
-    for j in wKingMoves:
-        print(j)
-    print("Black King Moves:")
-    for j in bKingMoves:
-        print(j)
+    
+    
+    ''' Print all moves possible '''
+    # wMoves = board.getLegalMoves('white')
+    # bMoves = board.getLegalMoves('black')
+    # #print(len(moves))
+    #
+    # #Empty lists for appending moves
+    # wRookMoves = []
+    # wKingMoves = []
+    # bKingMoves = []
+    #
+    # #loop to go through all the legal white piece moves
+    # #   appends those moves to the correct list
+    # for i in wMoves:
+    #     #i[x] let's me parse through the tuples within the list
+    #     if i[0] == 'Rook':
+    #         wRookMoves.append( (i[1]+1,printCol(i[2])) )
+    #     elif i[0] == 'King':
+    #         wKingMoves.append( (i[1]+1,printCol(i[2])) )
+    #
+    # for i in bMoves:
+    #     bKingMoves.append( (i[1]+1,printCol(i[2])) )
+    #
+    # #Just used to check if all the moves were put in
+    # print("White Rook Moves:")
+    # for j in wRookMoves:
+    #     print(j)
+    # print("White King Moves:")
+    # for j in wKingMoves:
+    #     print(j)
+    # print("Black King Moves:")
+    # for j in bKingMoves:
+    #     print(j)
     
     
     savedState = board.saveState()
-    score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
+    moves = board.legalMoves('white')
+    print('moving from {} to {}'.format(moves[0][0],moves[0][1]))
+    board.movePiece(moves[0][0],moves[0][1])
+    print(board)
+    # move = minimax(board)
+    # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
     board.restoreState(savedState)
-    print('Moving: ', move)
-    board.movePiece(move[0], move[1])
+    # print('Moving: ', move)
+    # board.movePiece(move[0], move[1])
     print(board)
     # board.setup()
     # print(board)
