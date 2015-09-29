@@ -4,7 +4,7 @@ from Square import Square
 from Piece import Piece
 from Strategy import Strategy
 
-class Board:
+class Board(object):
 
     blackIsInCheckmate = False
     whiteIsInCheckmate = False
@@ -62,6 +62,24 @@ class Board:
             pieceLocation = Square.parsePosition(loc)
 
             self.squares[Square.position(pieceLocation['row'], pieceLocation['col'])].assignPiece(piece)
+
+    def cloneBoard(self):
+        # create new board
+        clone = Board()
+
+        print(self)
+        for loc, square in self.squares.items():
+            if square.isOccupied():
+                piece = square.getPiece()
+                print(piece)
+                # clone.addPiece(square.getPiece)
+        
+        # for piece in square
+        # clone.addPiece()
+        # for piece in saveState:
+        #     print(piece)
+        
+        return clone
 
     def addPiece(self, color, pieceType, row, column):
         '''

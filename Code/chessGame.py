@@ -54,6 +54,18 @@ def printCol(colVal):
 def solve_game(board):
 
     print(board)
+    savedState = board.saveState()
+    
+        '''DEEP COPY'''
+    # save = deepcopy(savedState)
+    # print(save)
+     
+    # moves = deepcopy(board.squares)
+    # clone = Board()
+    # clone.squares = moves
+    
+    # print(clone)
+    
     
     
     ''' Print all moves possible '''
@@ -89,11 +101,15 @@ def solve_game(board):
     # for j in bKingMoves:
     #     print(j)
     
+
     
-    savedState = board.saveState()
-    moves = board.legalMoves('white')
+    # print(savedState[0][1].getType())
+    # moves = clone.legalMoves('white')
+    # clone = board.cloneBoard()
+    # clone = Board()
 #     print('moving from {} to {}'.format(moves[0][0],moves[0][1]))
-#     board.movePiece(moves[0][0],moves[0][1])
+    # clone.movePiece(moves[0][0],moves[0][1])
+    # print(clone)
 #     print(board)
     # clone = deepcopy(board)
     # clone.movePiece(moves[0][0],moves[0][1])
@@ -101,17 +117,21 @@ def solve_game(board):
     # print(board)
     # print('clone')
     # print(clone)
-    clone = Board()
-    print(clone)
-    clone.restoreState(savedState)
-    print(clone)
-    clone.movePiece(moves[0][0],moves[0][1])
-    print(clone)
-    # move = minimax(board)
-    print(board)
-    
+    # clone = Board()
+    # print(clone)
+    # clone.restoreState(savedState)
+    # print(clone)
+    # clone.movePiece(moves[0][0],moves[0][1])
+    # print(clone)
+ 
+     '''minimax'''
+    move = minimax(board)
+ 
+ 
+    # print(board)
+    # print(save)
     # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
-    board.restoreState(savedState)
+    board.restoreState(save)
     # print('Moving: ', move)
     # board.movePiece(move[0], move[1])
     print(board)

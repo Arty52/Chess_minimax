@@ -9,8 +9,8 @@ def minimax(board):
     best_move = moves[0]
     best_score = float('-inf')
     for move in moves:
-        # clone = deepcopy(board)
-        clone = board
+        clone = deepcopy(board)
+        print(clone is board)
         print('minimax moving from {} to {}'.format(move[0], move[1]))
         clone.movePiece(move[0], move[1])
         # print(move[0], move[1])
@@ -54,6 +54,7 @@ def max_play(board, depth):
     print('in max_play')
     color = 'white'
     if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
+        print('max_play basecase')
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('-inf')
