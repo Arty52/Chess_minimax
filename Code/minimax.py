@@ -1,46 +1,70 @@
 from Board import Board
+from copy import deepcopy
 
 def minimax(board):
-    depth = 3
+    print('in minimax')
+    depth = 4
     color = 'white'
     moves = board.legalMoves(color)
     best_move = moves[0]
     best_score = float('-inf')
     for move in moves:
-        print(board)
+        # clone = deepcopy(board)
         clone = board
+        print('minimax moving from {} to {}'.format(move[0], move[1]))
         clone.movePiece(move[0], move[1])
-        print(move[0], move[1])
-        print(clone)
+        # print(move[0], move[1])
+        # print(clone)
         score = min_play(clone, depth - 1)
+        print('returned from min_play')
         if score > best_score:
             best_move = move
             best_score = score
+    print('returning from minimax')
     return best_move
 
 def min_play(board, depth):
+    print('in min_play')
     color = 'black'
     if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('inf')
     for move in moves:
-        clone = board.movePiece(move[0], move[1])
+        print('min_play board:')
+        print(board)
+        # clone = deepcopy(board)
+        clone = board
+        print('min_play moving from {} to {}'.format(move[0], move[1]))
+        clone.movePiece(move[0], move[1])
+        print('board:')
+        print(board)
+        print('clone:')
+        print(clone)
         score = max_play(clone, depth - 1)
+        print('returned from max_play')
         if score < best_score:
+            print('new best move from {} to {}'.format(move[0], move[1]))
             best_move = move
+            print('new best score {}'.format(score))
             best_score = score
     return best_score
 
 def max_play(board, depth):
+    print('in max_play')
     color = 'white'
     if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('-inf')
     for move in moves:
-        clone = board.movePiece(move[0], move[1])
+        # clone = deepcopy(board)
+        clone = board
+        print('max_play moving from {} to {}'.format(move[0], move[1]))
+        clone.movePiece(move[0], move[1])
+        print(clone)
         score = min_play(clone, depth - 1)
+        print('returned from min_play')
         if score > best_score:
             best_move = move
             best_score = score

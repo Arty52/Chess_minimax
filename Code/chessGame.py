@@ -1,5 +1,6 @@
 import numpy
 import sys
+from copy import deepcopy
 
 from minimax import minimax
 # from minimax import heuristicWhite
@@ -90,16 +91,31 @@ def solve_game(board):
     
     
     savedState = board.saveState()
-    # moves = board.legalMoves('white')
+    moves = board.legalMoves('white')
 #     print('moving from {} to {}'.format(moves[0][0],moves[0][1]))
 #     board.movePiece(moves[0][0],moves[0][1])
 #     print(board)
-    move = minimax(board)
+    # clone = deepcopy(board)
+    # clone.movePiece(moves[0][0],moves[0][1])
+    # print('board')
+    # print(board)
+    # print('clone')
+    # print(clone)
+    clone = Board()
+    print(clone)
+    clone.restoreState(savedState)
+    print(clone)
+    clone.movePiece(moves[0][0],moves[0][1])
+    print(clone)
+    # move = minimax(board)
+    print(board)
+    
     # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
     board.restoreState(savedState)
     # print('Moving: ', move)
     # board.movePiece(move[0], move[1])
     print(board)
+    # print(clone)
     # board.setup()
     # print(board)
     # pieces = board.saveState()

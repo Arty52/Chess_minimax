@@ -89,10 +89,17 @@ class Board:
 
         piece = fromSquare.getPiece()
         fromSquare.removePiece()
-
-        toSquare.assignPiece(piece)
+        
+        # for loc, square in self.squares.items():
+        #     if square.isOccupied():
+        #         print('Occupied:')
+        #         print(loc, square)
+            
+        # toSquare.assignPiece(piece)
         
         # Add piece to the board
+        print('from: {} {}'.format(piece, fromSquare))
+        print('to: {} {}'.format(piece, toSquare))
         self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
 
     def legalMoves(self, color):
@@ -216,6 +223,12 @@ class Board:
     def oppositeColor(color):
         return 'black' if color == 'white' else 'white'
 
+    def __deepcopy__(self, memo = {}):
+        from copy import deepcopy
+        result = self.__class__()
+        memo[id(self)] = result
+        result = self.__class__.__new__()
+        return result
 
     def __str__(self):
 ##        return self.getPieceSquare('white','King')
@@ -299,20 +312,20 @@ class Board:
         movesLookup = whiteMoves if color == 'white' else blackMoves
 
         # Evaluate the available attacks on the board and give a bonus
-        attackBonus = self.evaluateAttackBonus(color, movesLookup)
+        # attackBonus = self.evaluateAttackBonus(color, movesLookup)
 
         movesLookup = whiteMoves if color == 'black' else blackMoves
 
         # Evaluate the pieces under attack and subtract points for those positions
-        underAttack = self.evaluateUnderAttack(color, movesLookup)
+        # underAttack = self.evaluateUnderAttack(color, movesLookup)
 
         total = 20000 * (whiteKing - blackKing)
         total += 500 * (whiteRook) # No black rook exists
         total += 10 * (len(whiteMoves) - len(blackMoves))
 
         total += positionBonus
-        total += attackBonus
-        total += underAttack
+        # total += attackBonus
+        # total += underAttack
 
         print('Evaluation of move = ' + str(total))
 
