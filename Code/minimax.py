@@ -34,11 +34,12 @@ def minimax(board):
        #  print(move[0], move[1])
        #  print(clone)
         score = min_play(clone, depth - 1)
-        print('returned from min_play')
+        # print('returned from min_play')
         if score > best_score:
             best_move = step
             best_score = score
-    print('returning from minimax')
+    # print('returning from minimax')
+    print('best score: {}'.format(best_score))
     return best_move
 
 def min_play(board, depth):
@@ -46,26 +47,27 @@ def min_play(board, depth):
     color = 'black'
     if depth == 0:
     # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
+        print('min_play basecase')
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('inf')
     for move in moves:
-        print('min_play board:')
-        print(board)
+        # print('min_play board:')
+        # print(board)
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
         step = deepcopy(move)
         # clone = deepcopy(board)
 #         clone.squares = deepcopy(board.squares)
         # clone = board
-        print('min_play moving from {} to {}'.format(step[0], step[1]))
+        # print('min_play moving from {} to {}'.format(step[0], step[1]))
         clone.movePiece(step[0], step[1])
-        print('board:')
-        print(board)
-        print('clone:')
-        print(clone)
+        # print('board:')
+        # print(board)
+        # print('clone:')
+        # print(clone)
         score = max_play(clone, depth - 1)
-        print('returned from max_play')
+        # print('returned from max_play')
         if score < best_score:
             print('new best move from {} to {}'.format(step[0], step[1]))
             best_move = step
@@ -89,9 +91,9 @@ def max_play(board, depth):
         # clone = deepcopy(board)
 #         clone.squares = deepcopy(board.squares)
         # clone = board
-        print('max_play moving from {} to {}'.format(step[0], step[1]))
+        # print('max_play moving from {} to {}'.format(step[0], step[1]))
         clone.movePiece(step[0], step[1])
-        print(clone)
+        # print(clone)
         score = min_play(clone, depth - 1)
         print('returned from min_play')
         if score > best_score:

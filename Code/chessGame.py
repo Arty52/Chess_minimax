@@ -127,13 +127,19 @@ def solve_game(board):
     '''minimax'''
     move = minimax(board)
  
- 
     # print(board)
     # print(save)
     # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
-    board.restoreState(save)
-    # print('Moving: ', move)
-    # board.movePiece(move[0], move[1])
+    board.restoreState(savedState)
+    print(savedState)
+    print(board)
+    #print board pieces
+    for loc, square in board.squares.items():
+        if square.isOccupied():
+            print(square.getPiece())
+    
+    print('Moving from {} to {} '.format(move[0], move[1]))
+    board.movePiece(move[0], move[1])
     print(board)
     # print(clone)
     # board.setup()
