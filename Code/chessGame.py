@@ -7,10 +7,12 @@ from minimax import minimax
 from Board import Board
 
 GAME_STATES = []
+_filehandle = None
 
-def importBoard():
+def importBoard():    
     try:
-        with open('testcase1.txt') as fh:
+        with open(_filehandle) as fh:
+        # with open('testcase1.txt') as fh:
             if fh:
                 print('reading file')
                 for i in fh:
@@ -22,6 +24,42 @@ def importBoard():
         print()
         print('Your file was not found!')
         print()
+
+def outputBoard(board):
+    # Open file so that we can write to it. This will create a new file if DNE
+    # output_file_handle = open(_filehandle, 'w')
+    
+    white_king = None
+    white_rook = None
+    black_king = None
+    
+    # Get pieces
+    for loc, square in board.squares.items():
+        if square.isOccupied():
+            if square.Piece.getType() == 'King' and square.Piece.getColor() == 'white':
+                white_king = ( int(square.getRow()) + 1, int(square.getColumn()) + 1 )
+            elif square.Piece.getType() == 'King' and square.Piece.getColor() == 'black':
+                black_king = ( int(square.getRow()) + 1, int(square.getColumn()) + 1 )
+            elif square.Piece.getType() == 'Rook':
+                white_rook = ( int(square.getRow()) + 1, int(square.getColumn()) + 1 )
+
+    """
+    Correct output: x.K(5,6), x.R(8,5), y.K(6,8)
+    on a single line. (Row, Column)
+    """
+
+    # Make string for output
+    board_configuration = 'x.K({},{}), x.R({},{}), y.K({},{})'.format(white_king[0], white_king[1],\
+                                                                      white_rook[0], white_rook[1],\
+                                                                      black_king[0], black_king[1] )
+    
+    print('Board Configuration:')
+    print(board_configuration)
+    # Print piece positions to file
+    # print('{}{}{}'.format(), file = output_file_handle)
+    
+    # print('The next board configuration has been stored to {} in the working directory.'.format(output_file_handle))
+    # output_file_handle.close()
 
 def playCase():
     for line in GAME_STATES:
@@ -44,7 +82,7 @@ def playCase():
             sys.exit()
             
         solve_game(board)
-        sys.exit()      #run only once
+        # sys.exit()      #run only once
 
 # Takes column value and returns column letter
 def printCol(colVal):
@@ -63,10 +101,6 @@ def solve_game(board):
     # moves = deepcopy(board.squares)
     # clone = Board()
     # clone.squares = moves
-    
-    # print(clone)
-    
-    
     
     ''' Print all moves possible '''
     # wMoves = board.getLegalMoves('white')
@@ -143,11 +177,12 @@ def solve_game(board):
             move[0].assignPiece(square.getPiece())
         if square.isOccupied() and square == move[1]:
             move[1].assignPiece(square.getPiece())
-    
-    
+
+
     print('Moving from {} to {} '.format(move[0], move[1]))
     board.movePiece(move[0], move[1])
     print(board)
+    outputBoard(board)
     # print(clone)
     # board.setup()
     # print(board)
@@ -158,20 +193,21 @@ def solve_game(board):
     # print(board)
 
 
-
 def main():
+    global _filehandle
+    
     print('Welcome to Art and Adam\'s minimax chess AI!')
     print()
     
-    '''
-    Show what all three pieces look like
-    '''
-    
-    importBoard()
-    playCase()
+    while True:
+        _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+        if _filehandle != 'quit':
+            importBoard()
+            playCase()
 
-    # solve
-    
+        else:
+            print('Goodbye!')
+            break
 
 if __name__ == '__main__':
     main()
