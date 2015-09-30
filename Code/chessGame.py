@@ -136,7 +136,14 @@ def solve_game(board):
     #print board pieces
     for loc, square in board.squares.items():
         if square.isOccupied():
-            print(square.getPiece())
+            print(square.getPiece(), square.getRow(), square.getColumn())
+        '''populate object from board into move'''
+        if square.isOccupied() and square == move[0]:
+            print('match!')
+            move[0].assignPiece(square.getPiece())
+        if square.isOccupied() and square == move[1]:
+            move[1].assignPiece(square.getPiece())
+    
     
     print('Moving from {} to {} '.format(move[0], move[1]))
     board.movePiece(move[0], move[1])

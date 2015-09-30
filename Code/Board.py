@@ -93,7 +93,7 @@ class Board(object):
 
         pieceObject = Piece(type=pieceType, color=color)
         self.squares[Square.position(row, column)].assignPiece(pieceObject)
-
+    
     def movePiece(self, fromSquare, toSquare):
         '''
         :type fromSquare: Square
