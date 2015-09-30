@@ -12,28 +12,28 @@ def minimax(board):
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
         step = deepcopy(move)
-        print(move)
-        print('minimax moving from {} to {}'.format(step[0], step[1]))
-        print('board:')
-        print(board)
-        print('clone:')
-        print(clone)
-        for loc, square in clone.squares.items():
-            if square.isOccupied():
-                print(square)
+        # print(move)
+        # print('minimax moving from {} to {}'.format(step[0], step[1]))
+        # print('board:')
+        # print(board)
+        # print('clone:')
+        # print(clone)
+        # for loc, square in clone.squares.items():
+        #     if square.isOccupied():
+        #         print(square)
 
         clone.movePiece(step[0], step[1])
-        for loc, square in clone.squares.items():
-            if square.isOccupied():
-                print(square)
+        # for loc, square in clone.squares.items():
+        #     if square.isOccupied():
+        #         print(square)
 
-        print('board:')
-        print(board)
-        print('clone:')
-        print(clone)
-        print(move[0], move[1])
-        print(clone)
-        # score = min_play(clone, depth - 1)
+        # print('board:')
+       #  print(board)
+       #  print('clone:')
+       #  print(clone)
+       #  print(move[0], move[1])
+       #  print(clone)
+        score = min_play(clone, depth - 1)
         print('returned from min_play')
         if score > best_score:
             best_move = step
@@ -44,7 +44,8 @@ def minimax(board):
 def min_play(board, depth):
     print('in min_play')
     color = 'black'
-    if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
+    if depth == 0:
+    # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('inf')
@@ -53,9 +54,12 @@ def min_play(board, depth):
         print(board)
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
+        step = deepcopy(move)
+        # clone = deepcopy(board)
+#         clone.squares = deepcopy(board.squares)
         # clone = board
-        print('min_play moving from {} to {}'.format(move[0], move[1]))
-        clone.movePiece(move[0], move[1])
+        print('min_play moving from {} to {}'.format(step[0], step[1]))
+        clone.movePiece(step[0], step[1])
         print('board:')
         print(board)
         print('clone:')
@@ -63,8 +67,8 @@ def min_play(board, depth):
         score = max_play(clone, depth - 1)
         print('returned from max_play')
         if score < best_score:
-            print('new best move from {} to {}'.format(move[0], move[1]))
-            best_move = move
+            print('new best move from {} to {}'.format(step[0], step[1]))
+            best_move = step
             print('new best score {}'.format(score))
             best_score = score
     return best_score
@@ -72,7 +76,8 @@ def min_play(board, depth):
 def max_play(board, depth):
     print('in max_play')
     color = 'white'
-    if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
+    if depth == 0:
+    # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
         print('max_play basecase')
         return board.evaluate(color)
     moves = board.legalMoves(color)
@@ -80,14 +85,17 @@ def max_play(board, depth):
     for move in moves:
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
+        step = deepcopy(move)
+        # clone = deepcopy(board)
+#         clone.squares = deepcopy(board.squares)
         # clone = board
-        print('max_play moving from {} to {}'.format(move[0], move[1]))
-        clone.movePiece(move[0], move[1])
+        print('max_play moving from {} to {}'.format(step[0], step[1]))
+        clone.movePiece(step[0], step[1])
         print(clone)
         score = min_play(clone, depth - 1)
         print('returned from min_play')
         if score > best_score:
-            best_move = move
+            best_move = step
             best_score = score
     return best_score
 

@@ -299,10 +299,10 @@ class Board(object):
         whiteMoves = []
         blackMoves = []
 
-        if (color == 'white' and self.isCheckmate('black')) or (color == 'black' and self.isCheckmate('white')):
-            return 1000000
-        elif (color == 'white' and self.isCheckmate('white')) or (color == 'black' and self.isCheckmate('black')):
-            return -1000000
+        # if (color == 'white' and self.isCheckmate('black')) or (color == 'black' and self.isCheckmate('white')):
+            # return 1000000
+        # elif (color == 'white' and self.isCheckmate('white')) or (color == 'black' and self.isCheckmate('black')):
+            # return -1000000
 
         positionBonus = 0
 
