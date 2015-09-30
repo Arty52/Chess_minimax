@@ -55,6 +55,9 @@ def outputBoard(board):
     
     print('Board Configuration:')
     print(board_configuration)
+    """
+    Uncomment below to write to the file. Output will overwrite input
+    """
     # Print piece positions to file
     # print('{}{}{}'.format(), file = output_file_handle)
     
