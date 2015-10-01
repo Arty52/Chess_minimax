@@ -189,7 +189,7 @@ def solve_game(board):
     outputBoard(board)
     
     
-    16569
+
     
     # print(clone)
     # board.setup()
