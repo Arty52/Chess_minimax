@@ -1,9 +1,22 @@
 from Board import Board
 from copy import deepcopy
 
+count = 0
+
 def minimax(board):
+    global count
+    count += 1
     print('in minimax')
-    depth = 4
+    
+    """
+    Depth:
+    depth = 1 Max --> return
+    depth = 2 Max --> Mini --> return
+    depth = 3 Max --> Mini --> Max --> return
+    depth = 4 Max --> Mini --> Max --> Mini --> return
+    """
+    depth = 3               
+    
     color = 'white'
     moves = board.legalMoves(color)
     best_move = moves[0]
@@ -36,13 +49,18 @@ def minimax(board):
         score = min_play(clone, depth - 1)
         # print('returned from min_play')
         if score > best_score:
+            print('new best move from minimax: {} to {}'.format(step[0], step[1]))
             best_move = step
+            print('new best score from minimax:                                             {}'.format(score))
             best_score = score
     # print('returning from minimax')
+    print('count is: {}'.format(count))
     print('best score: {}'.format(best_score))
     return best_move
 
 def min_play(board, depth):
+    global count
+    count += 1
     print('in min_play')
     color = 'black'
     if depth == 0:
@@ -69,13 +87,15 @@ def min_play(board, depth):
         score = max_play(clone, depth - 1)
         # print('returned from max_play')
         if score < best_score:
-            print('new best move from {} to {}'.format(step[0], step[1]))
+            print('new best move from min_play: {} to {}'.format(step[0], step[1]))
             best_move = step
-            print('new best score {}'.format(score))
+            print('new best score from min_play:                                 {}'.format(score))
             best_score = score
     return best_score
 
 def max_play(board, depth):
+    global count
+    count += 1
     print('in max_play')
     color = 'white'
     if depth == 0:
@@ -97,7 +117,9 @@ def max_play(board, depth):
         score = min_play(clone, depth - 1)
         print('returned from min_play')
         if score > best_score:
+            print('new best move from max_play: {} to {}'.format(step[0], step[1]))
             best_move = step
+            print('new best score from max_play:                                 {}'.format(score))
             best_score = score
     return best_score
 

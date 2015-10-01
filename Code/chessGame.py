@@ -28,11 +28,11 @@ def importBoard():
 def outputBoard(board):
     # Open file so that we can write to it. This will create a new file if DNE
     # output_file_handle = open(_filehandle, 'w')
-    
+
     white_king = None
     white_rook = None
     black_king = None
-    
+
     # Get pieces
     for loc, square in board.squares.items():
         if square.isOccupied():
@@ -52,7 +52,7 @@ def outputBoard(board):
     board_configuration = 'x.K({},{}), x.R({},{}), y.K({},{})'.format(white_king[0], white_king[1],\
                                                                       white_rook[0], white_rook[1],\
                                                                       black_king[0], black_king[1] )
-    
+
     print('Board Configuration:')
     print(board_configuration)
     """
@@ -83,7 +83,7 @@ def playCase():
             print('Program will now exit.')
             print()
             sys.exit()
-            
+
         solve_game(board)
         # sys.exit()      #run only once
 
@@ -106,40 +106,41 @@ def solve_game(board):
     # clone.squares = moves
     
     ''' Print all moves possible '''
-    # wMoves = board.getLegalMoves('white')
-    # bMoves = board.getLegalMoves('black')
-    # #print(len(moves))
-    #
-    # #Empty lists for appending moves
-    # wRookMoves = []
-    # wKingMoves = []
-    # bKingMoves = []
-    #
-    # #loop to go through all the legal white piece moves
-    # #   appends those moves to the correct list
-    # for i in wMoves:
-    #     #i[x] let's me parse through the tuples within the list
-    #     if i[0] == 'Rook':
-    #         wRookMoves.append( (i[1]+1,printCol(i[2])) )
-    #     elif i[0] == 'King':
-    #         wKingMoves.append( (i[1]+1,printCol(i[2])) )
-    #
-    # for i in bMoves:
-    #     bKingMoves.append( (i[1]+1,printCol(i[2])) )
-    #
-    # #Just used to check if all the moves were put in
-    # print("White Rook Moves:")
-    # for j in wRookMoves:
-    #     print(j)
-    # print("White King Moves:")
-    # for j in wKingMoves:
-    #     print(j)
-    # print("Black King Moves:")
-    # for j in bKingMoves:
-    #     print(j)
-    
+    wMoves = board.getLegalMoves('white')
+    bMoves = board.getLegalMoves('black')
+    #print(len(moves))
 
-    
+    #Empty lists for appending moves
+    wRookMoves = []
+    wKingMoves = []
+    bKingMoves = []
+
+    #loop to go through all the legal white piece moves
+    #   appends those moves to the correct list
+    for i in wMoves:
+        #i[x] let's me parse through the tuples within the list
+        if i[0] == 'Rook':
+            wRookMoves.append( (i[1]+1,printCol(i[2])) )
+        elif i[0] == 'King':
+            wKingMoves.append( (i[1]+1,printCol(i[2])) )
+
+    for i in bMoves:
+        bKingMoves.append( (i[1]+1,printCol(i[2])) )
+
+    #Just used to check if all the moves were put in
+    print("White Rook Moves:")
+    print('Amount: {}'.format(len(wRookMoves)))
+    for j in wRookMoves:
+        print(j)
+    print("White King Moves:")
+    print('Amount: {}'.format(len(wKingMoves)))
+    for j in wKingMoves:
+        print(j)
+    print("Black King Moves:")
+    print('Amount: {}'.format(len(bKingMoves)))
+    for j in bKingMoves:
+        print(j)
+
     # print(savedState[0][1].getType())
     # moves = clone.legalMoves('white')
     # clone = board.cloneBoard()
@@ -163,7 +164,7 @@ def solve_game(board):
  
     '''minimax'''
     move = minimax(board)
- 
+
     # print(board)
     # print(save)
     # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
@@ -186,6 +187,10 @@ def solve_game(board):
     board.movePiece(move[0], move[1])
     print(board)
     outputBoard(board)
+    
+    
+    16569
+    
     # print(clone)
     # board.setup()
     # print(board)
@@ -195,16 +200,17 @@ def solve_game(board):
     # board.restoreState(pieces)
     # print(board)
 
-
 def main():
     global _filehandle
-    
+    global GAME_STATES
+
     print('Welcome to Art and Adam\'s minimax chess AI!')
     print()
-    
+
     while True:
         _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
         if _filehandle != 'quit':
+            GAME_STATES = []
             importBoard()
             playCase()
 
