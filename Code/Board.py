@@ -117,8 +117,8 @@ class Board(object):
         # toSquare.assignPiece(piece)
         
         # Add piece to the board
-        print('from: {} {}'.format(piece, fromSquare))
-        print('to: {} {}'.format(piece, toSquare))
+        # print('from: {} {}'.format(piece, fromSquare))
+        # print('to: {} {}'.format(piece, toSquare))
         self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
         
 
@@ -347,7 +347,7 @@ class Board(object):
         # total += attackBonus
         # total += underAttack
 
-        print('Evaluation of move = ' + str(total))
+        # print('Evaluation of move = ' + str(total))
 
         return total
 

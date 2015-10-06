@@ -6,11 +6,11 @@ minim = []
 min_p = []
 max_p = []
 
-def minimax(board):
+def minimax(board, turn):
     global minim
     global count
     count += 1
-    print('in minimax')
+    print('Computing minimax...')
     
     """
     Depth:
@@ -21,7 +21,11 @@ def minimax(board):
     """
     depth = 3
     
-    color = 'white'
+    if turn == 1:
+        color = 'white'
+    else:
+        color = 'black'
+        
     moves = board.legalMoves(color)
     best_move = moves[0]
     best_score = float('-inf')
@@ -29,52 +33,42 @@ def minimax(board):
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
         step = deepcopy(move)
-        # print(move)
-        # print('minimax moving from {} to {}'.format(step[0], step[1]))
-        # print('board:')
-        # print(board)
-        # print('clone:')
-        # print(clone)
-        # for loc, square in clone.squares.items():
-        #     if square.isOccupied():
-        #         print(square)
 
         clone.movePiece(step[0], step[1])
         # for loc, square in clone.squares.items():
         #     if square.isOccupied():
         #         print(square)
 
-        # print('board:')
-       #  print(board)
-       #  print('clone:')
-       #  print(clone)
-       #  print(move[0], move[1])
-       #  print(clone)
-        score = min_play(clone, depth - 1)
+        score = min_play(clone, depth - 1, turn)
         # print('returned from min_play')
         if score > best_score:
-            print('new best move from minimax: {} to {}'.format(step[0], step[1]))
+            # print('new best move from minimax: {} to {}'.format(step[0], step[1]))
             best_move = step
             minim.append(best_score)
-            print('new best score from minimax:                                             {}'.format(score))
+            # print('new best score from minimax:                                             {}'.format(score))
             best_score = score
     # print('returning from minimax')
-    print('count is: {}'.format(count))
-    print('best score: {}'.format(best_score))
-    print('Minimax: {}'.format(minim))
-    print('Min_play: {}'.format(min_p))
-    print('Max_play: {}'.format(max_p))
+    # print('count is: {}'.format(count))
+    # print('best score: {}'.format(best_score))
+    # print('Minimax: {}'.format(minim))
+    # print('Min_play: {}'.format(min_p))
+    # print('Max_play: {}'.format(max_p))
     return best_move
 
-def min_play(board, depth):
+def min_play(board, depth, turn):
     global count
     global min_p
     count += 1
-    print('in min_play')
-    color = 'black'
+    # print('in min_play')
+    
+    if turn == 1:
+        color = 'black'
+    else:
+        color = 'white'
+
     if depth == 0:
     # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
-        print('min_play basecase')
+        # print('min_play basecase')
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('inf')
@@ -93,25 +87,30 @@ def min_play(board, depth):
         # print(board)
         # print('clone:')
         # print(clone)
-        score = max_play(clone, depth - 1)
+        score = max_play(clone, depth - 1, turn)
         # print('returned from max_play')
         if score < best_score:
-            print('new best move from min_play: {} to {}'.format(step[0], step[1]))
+            # print('new best move from min_play: {} to {}'.format(step[0], step[1]))
             best_move = step
             min_p.append(best_score)
-            print('new best score from min_play:                                 {}'.format(score))
+            # print('new best score from min_play:                                 {}'.format(score))
             best_score = score
     return best_score
 
-def max_play(board, depth):
+def max_play(board, depth, turn):
     global max_p
     global count
     count += 1
-    print('in max_play')
-    color = 'white'
+    # print('in max_play')
+    
+    if turn == 1:
+        color = 'white'
+    else:
+        color = 'black'
+    
     if depth == 0:
     # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
-        print('max_play basecase')
+        # print('max_play basecase')
         return board.evaluate(color)
     moves = board.legalMoves(color)
     best_score = float('-inf')
@@ -125,13 +124,13 @@ def max_play(board, depth):
         # print('max_play moving from {} to {}'.format(step[0], step[1]))
         clone.movePiece(step[0], step[1])
         # print(clone)
-        score = min_play(clone, depth - 1)
-        print('returned from min_play')
+        score = min_play(clone, depth - 1, turn)
+        # print('returned from min_play')
         if score > best_score:
-            print('new best move from max_play: {} to {}'.format(step[0], step[1]))
+            # print('new best move from max_play: {} to {}'.format(step[0], step[1]))
             best_move = step
             max_p.append(best_score)
-            print('new best score from max_play:                                 {}'.format(score))
+            # print('new best score from max_play:                                 {}'.format(score))
             best_score = score
     return best_score
 

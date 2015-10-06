@@ -1,4 +1,3 @@
-import numpy
 import sys
 from copy import deepcopy
 
@@ -27,7 +26,7 @@ def importBoard():
 
 def outputBoard(board):
     # Open file so that we can write to it. This will create a new file if DNE
-    # output_file_handle = open(_filehandle, 'w')
+    output_file_handle = open(_filehandle, 'w')
 
     white_king = None
     white_rook = None
@@ -59,12 +58,12 @@ def outputBoard(board):
     Uncomment below to write to the file. Output will overwrite input
     """
     # Print piece positions to file
-    # print('{}{}{}'.format(), file = output_file_handle)
+    output_file_handle.write(board_configuration)  #uncomment up above
     
     # print('The next board configuration has been stored to {} in the working directory.'.format(output_file_handle))
     # output_file_handle.close()
 
-def playCase():
+def playCase(turn):
     for line in GAME_STATES:
         board = Board()
         try:
@@ -84,7 +83,7 @@ def playCase():
             print()
             sys.exit()
 
-        solve_game(board)
+        solve_game(board, turn)
         # sys.exit()      #run only once
 
 # Takes column value and returns column letter
@@ -92,7 +91,7 @@ def printCol(colVal):
     cols = ("A", "B", "C", "D", "E", "F", "G", "H")
     return cols[colVal]
 
-def solve_game(board):
+def solve_game(board, turn):
 
     print(board)
     savedState = board.saveState()
@@ -163,21 +162,21 @@ def solve_game(board):
     # print(clone)
  
     '''minimax'''
-    move = minimax(board)
+    move = minimax(board, turn)
 
     # print(board)
     # print(save)
     # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
     board.restoreState(savedState)
-    print(savedState)
+    # print(savedState)
     print(board)
     #print board pieces
     for loc, square in board.squares.items():
-        if square.isOccupied():
-            print(square.getPiece(), square.getRow(), square.getColumn())
+        # if square.isOccupied():
+            # print(square.getPiece(), square.getRow(), square.getColumn())
         '''populate object from board into move'''
         if square.isOccupied() and square == move[0]:
-            print('match!')
+            # print('match!')
             move[0].assignPiece(square.getPiece())
         if square.isOccupied() and square == move[1]:
             move[1].assignPiece(square.getPiece())
@@ -206,17 +205,44 @@ def main():
 
     print('Welcome to Art and Adam\'s minimax chess AI!')
     print()
-
-    while True:
-        _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
-        if _filehandle != 'quit':
+    
+    numberOfMoves = input('How many moves do you want to simulate? ')
+    numberOfMoves = int(numberOfMoves)
+    moveNumber = 1
+    
+    _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+    
+    
+    if _filehandle != 'quit':
+        Turn = 0
+        while numberOfMoves != 0:
+            if Turn == 1:
+                print('------------------------BLACK MOVE------------------------')
+                Turn = 0
+            elif Turn == 0:
+                print('------------------------WHITE MOVE------------------------')
+                Turn = 1
             GAME_STATES = []
             importBoard()
-            playCase()
+            playCase(Turn)
+            print('move number {}'.format(moveNumber))
+            numberOfMoves -= 1
+            moveNumber += 1
+    else:
+        print('Goodbye!')
+        quit()
 
-        else:
-            print('Goodbye!')
-            break
+    
+    # while True:
+    #     _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+    #     if _filehandle != 'quit':
+    #         GAME_STATES = []
+    #         importBoard()
+    #         playCase()
+    #
+    #     else:
+    #         print('Goodbye!')
+    #         break
 
 if __name__ == '__main__':
     main()
