@@ -229,6 +229,9 @@ class Board(object):
         
         print()
         print('Is black moves a subset of white moves? {}'.format(set(newBlackMoves).issubset(newWhiteMoves)))
+
+        # Return True if newBlackMoves is a subset of newWhiteMoves
+        return set(newBlackMoves).issubset(newWhiteMoves)
             #print('checkmate')
         # print(wMoves)
         # print()

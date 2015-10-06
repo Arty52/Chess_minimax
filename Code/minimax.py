@@ -1,5 +1,6 @@
 from Board import Board
 from copy import deepcopy
+import sys
 
 count = 0
 minim = []
@@ -26,7 +27,11 @@ def minimax(board, turn):
     else:
         color = 'black'
     
-    board.newCheckmate(color)
+    if board.newCheckmate(color):
+        print('CHECKMATE!')
+        print(board)
+        sys.exit()
+        
     
     moves = board.legalMoves(color)
     best_move = moves[0]
