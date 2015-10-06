@@ -210,21 +210,25 @@ class Board(object):
     	
         newWhiteMoves = []
         newBlackMoves = []
-    	
+
         for move in wMoves:
             newWhiteMoves.append((move[1],move[2]))
-        
+
         for move in bMoves:
-            newBlackMoves.append(move)
-        
+            # newBlackMoves.append(move)
+            newBlackMoves.append((move[1],move[2]))
+
         #print(set(newBlackMoves).issubset(newWhiteMoves))
-        
-        print(newBlackMoves)
-        print()
+        print('white moves:')
         print(newWhiteMoves)
+        print()
+        print('black moves:')
+        print(newBlackMoves)
         
         #return set(newBlackMoves).issubset(newWhiteMoves)
-        print(set(newBlackMoves).issubset(newWhiteMoves))
+        
+        print()
+        print('Is black moves a subset of white moves? {}'.format(set(newBlackMoves).issubset(newWhiteMoves)))
             #print('checkmate')
         # print(wMoves)
         # print()

@@ -25,7 +25,9 @@ def minimax(board, turn):
         color = 'white'
     else:
         color = 'black'
-        
+    
+    board.newCheckmate(color)
+    
     moves = board.legalMoves(color)
     best_move = moves[0]
     best_score = float('-inf')
