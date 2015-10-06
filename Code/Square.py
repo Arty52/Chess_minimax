@@ -55,12 +55,12 @@ class Square(object):
 
         if self.Piece.type == 'Rook':
             # All possible row moves
-            for i in range(self.MAX_ROW_BOUND):
+            for i in range(self.MAX_ROW_BOUND+1):
                 if i is not self.row:
                     moves.append(Square(i, self.column))
             
             # All possible column moves
-            for i in range(self.MAX_COL_BOUND):
+            for i in range(self.MAX_COL_BOUND+1):
                 if i is not self.column:
                     moves.append(Square(self.row, i))
 
