@@ -1,8 +1,8 @@
 from random import randint
-
 from Square import Square
 from Piece import Piece
 from Strategy import Strategy
+import sys
 
 class Board(object):
 
@@ -101,8 +101,19 @@ class Board(object):
         :return: None
         '''
 
+        piece = fromSquare.getPiece()
+
         '''If toSquare is occupied, capture piece'''
         if toSquare.isOccupied() and toSquare.getPiece().isAlive():
+            if toSquare.getPiece().getType() == 'King':
+                print('King Captured! Game Over')
+                for loc, square in self.squares.items():
+                    if square.isOccupied() and square == fromSquare:
+                        square.removePiece()
+                self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
+                print(self)
+                sys.exit()
+            
             self.capturedPieces.append(toSquare.getPiece())
 
         piece = fromSquare.getPiece()
@@ -120,7 +131,6 @@ class Board(object):
         # print('from: {} {}'.format(piece, fromSquare))
         # print('to: {} {}'.format(piece, toSquare))
         self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
-        
 
     def legalMoves(self, color):
         '''
@@ -217,33 +227,16 @@ class Board(object):
         for move in other_moves:
             # newBlackMoves.append(move)
             enemy_possible_moves.append((move[1],move[2]))
-
-        #print(set(newBlackMoves).issubset(newWhiteMoves))
-        # print('white moves:')
-        # print(newWhiteMoves)
-        # print()
-        # print('black moves:')
-        # print(newBlackMoves)
         
-        #return set(newBlackMoves).issubset(newWhiteMoves)
-        
-        print()
-        print('Is {} moves a subset of {} moves? {}'.format(Board.oppositeColor(color),\
-                                                                                color,\
-                                                                                set(enemy_possible_moves).issubset(my_possible_moves)))
 
-        # Return True if newBlackMoves is a subset of newWhiteMoves
+        # Return True if enemy_possible_moves is a subset of my_possible_moves
         for loc, square in self.squares.items():
             if square.isOccupied() and not square.getPiece().isColor(color):
                 for my_move in my_possible_moves:
                     if square.getRow() == my_move[0] and square.getColumn() == my_move[1]:
                         return set(enemy_possible_moves).issubset(my_possible_moves)
-        
+
         return False
-            #print('checkmate')
-        # print(wMoves)
-        # print()
-        # print(bMoves)
 
     def isCheckmate(self, color):
 

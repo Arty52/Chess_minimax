@@ -139,27 +139,6 @@ def solve_game(board, turn):
     print('Amount: {}'.format(len(bKingMoves)))
     for j in bKingMoves:
         print(j)
-
-    # print(savedState[0][1].getType())
-    # moves = clone.legalMoves('white')
-    # clone = board.cloneBoard()
-    # clone = Board()
-#     print('moving from {} to {}'.format(moves[0][0],moves[0][1]))
-    # clone.movePiece(moves[0][0],moves[0][1])
-    # print(clone)
-#     print(board)
-    # clone = deepcopy(board)
-    # clone.movePiece(moves[0][0],moves[0][1])
-    # print('board')
-    # print(board)
-    # print('clone')
-    # print(clone)
-    # clone = Board()
-    # print(clone)
-    # clone.restoreState(savedState)
-    # print(clone)
-    # clone.movePiece(moves[0][0],moves[0][1])
-    # print(clone)
  
     '''minimax'''
     move = minimax(board, turn)
@@ -184,20 +163,12 @@ def solve_game(board, turn):
 
     print('Moving from {} to {} '.format(move[0], move[1]))
     board.movePiece(move[0], move[1])
+
+    if board.inCheck('black'):
+        print('Black in Check!')
+
     print(board)
     outputBoard(board)
-    
-    
-
-    
-    # print(clone)
-    # board.setup()
-    # print(board)
-    # pieces = board.saveState()
-    # board.clearBoard()
-    # print(board)
-    # board.restoreState(pieces)
-    # print(board)
 
 def main():
     global _filehandle
@@ -205,6 +176,12 @@ def main():
 
     print('Welcome to Art and Adam\'s minimax chess AI!')
     print()
+    
+    side = input('Which player would you like to go first (x - white or y - black)? ')
+    if side == 'x':
+        turn = 0
+    else:
+        turn = 1
     
     numberOfMoves = input('How many moves do you want to simulate? ')
     numberOfMoves = int(numberOfMoves)
@@ -216,17 +193,16 @@ def main():
     
     
     if _filehandle != 'quit':
-        Turn = 0
         while numberOfMoves != 0:
-            if Turn == 1:
+            if turn == 1:
                 print('------------------------BLACK MOVE------------------------')
-                Turn = 0
-            elif Turn == 0:
+                turn = 0
+            elif turn == 0:
                 print('------------------------WHITE MOVE------------------------')
-                Turn = 1
+                turn = 1
             GAME_STATES = []
             importBoard()
-            playCase(Turn)
+            playCase(turn)
             print('move number {}'.format(moveNumber))
             numberOfMoves -= 1
             moveNumber += 1

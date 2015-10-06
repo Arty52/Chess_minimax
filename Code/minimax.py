@@ -27,11 +27,11 @@ def minimax(board, turn):
     else:
         color = 'black'
     
+    # Check for checkmate
     if board.newCheckmate(color):
         print('CHECKMATE!')
         print(board)
         sys.exit()
-        
     
     moves = board.legalMoves(color)
     best_move = moves[0]
@@ -45,8 +45,11 @@ def minimax(board, turn):
         # for loc, square in clone.squares.items():
         #     if square.isOccupied():
         #         print(square)
-
-        score = min_play(clone, depth - 1, turn)
+        
+        if color == 'white':
+            score = min_play(clone, depth - 1, turn)
+        else:
+            score = max_play(clone, depth - 1, turn)
         # print('returned from min_play')
         if score > best_score:
             # print('new best move from minimax: {} to {}'.format(step[0], step[1]))
