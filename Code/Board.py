@@ -219,11 +219,11 @@ class Board(object):
             newBlackMoves.append((move[1],move[2]))
 
         #print(set(newBlackMoves).issubset(newWhiteMoves))
-        print('white moves:')
-        print(newWhiteMoves)
-        print()
-        print('black moves:')
-        print(newBlackMoves)
+        # print('white moves:')
+        # print(newWhiteMoves)
+        # print()
+        # print('black moves:')
+        # print(newBlackMoves)
         
         #return set(newBlackMoves).issubset(newWhiteMoves)
         
