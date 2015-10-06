@@ -106,7 +106,9 @@ class Board(object):
         '''If toSquare is occupied, capture piece'''
         if toSquare.isOccupied() and toSquare.getPiece().isAlive():
             if toSquare.getPiece().getType() == 'King':
+                print()
                 print('King Captured! Game Over')
+                print()
                 for loc, square in self.squares.items():
                     if square.isOccupied() and square == fromSquare:
                         square.removePiece()
@@ -326,10 +328,10 @@ class Board(object):
         whiteMoves = []
         blackMoves = []
 
-        # if (color == 'white' and self.isCheckmate('black')) or (color == 'black' and self.isCheckmate('white')):
-            # return 1000000
-        # elif (color == 'white' and self.isCheckmate('white')) or (color == 'black' and self.isCheckmate('black')):
-            # return -1000000
+        if (color == 'white' and self.newCheckmate('black')) or (color == 'black' and self.newCheckmate('white')):
+            return 1000000
+        elif (color == 'white' and self.newCheckmate('white')) or (color == 'black' and self.newCheckmate('black')):
+            return -1000000
 
         positionBonus = 0
 
@@ -356,8 +358,6 @@ class Board(object):
             elif piece.isType('Rook') and piece.isColor('white'):
                 whiteRook = 0
 
-        movesLookup = whiteMoves if color == 'white' else blackMoves
-
         # Evaluate the available attacks on the board and give a bonus
         # attackBonus = self.evaluateAttackBonus(color, movesLookup)
 
@@ -371,8 +371,8 @@ class Board(object):
         total += 10 * (len(whiteMoves) - len(blackMoves))
 
         total += positionBonus
-        # total += attackBonus
-        # total += underAttack
+        # total += self.evaluateAttackBonus(color, movesLookup)
+        # total += self.evaluateUnderAttack(color, movesLookup)
 
         # print('Evaluation of move = ' + str(total))
 
@@ -384,11 +384,15 @@ class Board(object):
 
         # King Attack
         kingLocation = self.getPieceSquare(Board.oppositeColor(color), 'King')
+        print(color)
+        print(kingLocation)
 
         # Rook Attack
         rookLocation = self.getPieceSquare(Board.oppositeColor(color), 'Rook')
+        print(rookLocation)
 
         for move in moves:
+            print(move)
 
             if move == kingLocation:
                 attackBonus += Strategy.ATTACK_KING_BONUS
