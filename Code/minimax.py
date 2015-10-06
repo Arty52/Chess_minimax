@@ -2,8 +2,12 @@ from Board import Board
 from copy import deepcopy
 
 count = 0
+minim = []
+min_p = []
+max_p = []
 
 def minimax(board):
+    global minim
     global count
     count += 1
     print('in minimax')
@@ -15,7 +19,7 @@ def minimax(board):
     depth = 3 Max --> Mini --> Max --> return
     depth = 4 Max --> Mini --> Max --> Mini --> return
     """
-    depth = 3               
+    depth = 3
     
     color = 'white'
     moves = board.legalMoves(color)
@@ -51,15 +55,20 @@ def minimax(board):
         if score > best_score:
             print('new best move from minimax: {} to {}'.format(step[0], step[1]))
             best_move = step
+            minim.append(best_score)
             print('new best score from minimax:                                             {}'.format(score))
             best_score = score
     # print('returning from minimax')
     print('count is: {}'.format(count))
     print('best score: {}'.format(best_score))
+    print('Minimax: {}'.format(minim))
+    print('Min_play: {}'.format(min_p))
+    print('Max_play: {}'.format(max_p))
     return best_move
 
 def min_play(board, depth):
     global count
+    global min_p
     count += 1
     print('in min_play')
     color = 'black'
@@ -89,11 +98,13 @@ def min_play(board, depth):
         if score < best_score:
             print('new best move from min_play: {} to {}'.format(step[0], step[1]))
             best_move = step
+            min_p.append(best_score)
             print('new best score from min_play:                                 {}'.format(score))
             best_score = score
     return best_score
 
 def max_play(board, depth):
+    global max_p
     global count
     count += 1
     print('in max_play')
@@ -119,6 +130,7 @@ def max_play(board, depth):
         if score > best_score:
             print('new best move from max_play: {} to {}'.format(step[0], step[1]))
             best_move = step
+            max_p.append(best_score)
             print('new best score from max_play:                                 {}'.format(score))
             best_score = score
     return best_score
