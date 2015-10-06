@@ -205,18 +205,18 @@ class Board(object):
         return False
 
     def newCheckmate(self, color):
-        wMoves = self.getLegalMoves('white')
-        bMoves = self.getLegalMoves('black')
-    	
-        newWhiteMoves = []
-        newBlackMoves = []
+        my_moves    = self.getLegalMoves(color)
+        other_moves = self.getLegalMoves(Board.oppositeColor(color))
 
-        for move in wMoves:
-            newWhiteMoves.append((move[1],move[2]))
+        my_possible_moves = []
+        enemy_possible_moves = []
 
-        for move in bMoves:
+        for move in my_moves:
+            my_possible_moves.append((move[1],move[2]))
+
+        for move in other_moves:
             # newBlackMoves.append(move)
-            newBlackMoves.append((move[1],move[2]))
+            enemy_possible_moves.append((move[1],move[2]))
 
         #print(set(newBlackMoves).issubset(newWhiteMoves))
         # print('white moves:')
@@ -228,10 +228,18 @@ class Board(object):
         #return set(newBlackMoves).issubset(newWhiteMoves)
         
         print()
-        print('Is black moves a subset of white moves? {}'.format(set(newBlackMoves).issubset(newWhiteMoves)))
+        print('Is {} moves a subset of {} moves? {}'.format(Board.oppositeColor(color),\
+                                                                                color,\
+                                                                                set(enemy_possible_moves).issubset(my_possible_moves)))
 
         # Return True if newBlackMoves is a subset of newWhiteMoves
-        return set(newBlackMoves).issubset(newWhiteMoves)
+        for loc, square in self.squares.items():
+            if square.isOccupied() and not square.getPiece().isColor(color):
+                for my_move in my_possible_moves:
+                    if square.getRow() == my_move[0] and square.getColumn() == my_move[1]:
+                        return set(enemy_possible_moves).issubset(my_possible_moves)
+        
+        return False
             #print('checkmate')
         # print(wMoves)
         # print()
@@ -271,17 +279,9 @@ class Board(object):
         print('Checkmate? ', stillInCheck)
         return stillInCheck
 
-
     @staticmethod
     def oppositeColor(color):
         return 'black' if color == 'white' else 'white'
-
-    # def __deepcopy__(self, memo = {}):
-    #     from copy import deepcopy
-    #     result = self.__class__()
-    #     memo[id(self)] = result
-    #     result = self.__class__.__new__()
-    #     return result
 
     def __str__(self):
 ##        return self.getPieceSquare('white','King')
@@ -323,6 +323,7 @@ class Board(object):
     D,S,I = doubled, blocked and isolated pawns
     M = Mobility (the number of legal moves)
     '''
+
     def evaluate(self, color):
 
         whiteKing = 1
