@@ -204,6 +204,32 @@ class Board(object):
     def isDraw(self):
         return False
 
+    def newCheckmate(self, color):
+        wMoves = self.getLegalMoves('white')
+        bMoves = self.getLegalMoves('black')
+    	
+        newWhiteMoves = []
+        newBlackMoves = []
+    	
+        for move in wMoves:
+            newWhiteMoves.append((move[1],move[2]))
+        
+        for move in bMoves:
+            newBlackMoves.append(move)
+        
+        #print(set(newBlackMoves).issubset(newWhiteMoves))
+        
+        print(newBlackMoves)
+        print()
+        print(newWhiteMoves)
+        
+        #return set(newBlackMoves).issubset(newWhiteMoves)
+        print(set(newBlackMoves).issubset(newWhiteMoves))
+            #print('checkmate')
+        # print(wMoves)
+        # print()
+        # print(bMoves)
+
     def isCheckmate(self, color):
 
         # Perform some caching for multiple checkmate lookups

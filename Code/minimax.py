@@ -66,7 +66,8 @@ def min_play(board, depth, turn):
     else:
         color = 'white'
 
-    if depth == 0:
+    if depth == 0 or board.newCheckmate(color):
+    # if depth == 0:
     # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
         # print('min_play basecase')
         return board.evaluate(color)
@@ -108,7 +109,7 @@ def max_play(board, depth, turn):
     else:
         color = 'black'
     
-    if depth == 0:
+    if depth == 0 or board.newCheckmate(color):
     # if depth == 0 or board.isCheckmate(color) or board.isCheckmate(Board.oppositeColor(color)) or board.isDraw():
         # print('max_play basecase')
         return board.evaluate(color)

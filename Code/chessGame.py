@@ -210,7 +210,9 @@ def main():
     numberOfMoves = int(numberOfMoves)
     moveNumber = 1
     
-    _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+    # _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+    print('...running testcase.txt')
+    _filehandle = 'testcase.txt'
     
     
     if _filehandle != 'quit':
