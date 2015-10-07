@@ -92,7 +92,14 @@ class Square(object):
                 for i in range(self.column - 1, self.column + 2):
                     if i >= self.MIN_COL_BOUND and i <= self.MAX_COL_BOUND:
                         moves.append(Square(newRow, i))
-
+        
+        # m = []
+        # for square in moves:
+        #     if square.getPiece().getColor() == 'white':
+        #         m.append(square.getPiece())
+        #
+        # print(m)
+        
         return moves
 
     @staticmethod

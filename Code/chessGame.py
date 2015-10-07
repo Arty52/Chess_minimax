@@ -97,39 +97,39 @@ def solve_game(board, turn):
     savedState = board.saveState()
     
     ''' Print all moves possible '''
-    # wMoves = board.getLegalMoves('white')
-    # bMoves = board.getLegalMoves('black')
-    # #print(len(moves))
-    #
-    # #Empty lists for appending moves
-    # wRookMoves = []
-    # wKingMoves = []
-    # bKingMoves = []
-    #
-    # #loop to go through all the legal white piece moves
-    # #   appends those moves to the correct list
-    # for i in wMoves:
-    #     #i[x] let's me parse through the tuples within the list
-    #     if i[0] == 'Rook':
-    #         wRookMoves.append( (i[1]+1,printCol(i[2])) )
-    #     elif i[0] == 'King':
-    #         wKingMoves.append( (i[1]+1,printCol(i[2])) )
-    #
-    # for i in bMoves:
-    #     bKingMoves.append( (i[1]+1,printCol(i[2])) )
-    #Just used to check if all the moves were put in
-    # print("White Rook Moves:")
-    # print('Amount: {}'.format(len(wRookMoves)))
-    # for j in wRookMoves:
-    #     print(j)
-    # print("White King Moves:")
-    # print('Amount: {}'.format(len(wKingMoves)))
-    # for j in wKingMoves:
-    #     print(j)
-    # print("Black King Moves:")
-    # print('Amount: {}'.format(len(bKingMoves)))
-    # for j in bKingMoves:
-    #     print(j)
+    wMoves = board.getLegalMoves('white')
+    bMoves = board.getLegalMoves('black')
+    #print(len(moves))
+
+    #Empty lists for appending moves
+    wRookMoves = []
+    wKingMoves = []
+    bKingMoves = []
+
+    #loop to go through all the legal white piece moves
+    #   appends those moves to the correct list
+    for i in wMoves:
+        #i[x] let's me parse through the tuples within the list
+        if i[0] == 'Rook':
+            wRookMoves.append( (i[1]+1,printCol(i[2])) )
+        elif i[0] == 'King':
+            wKingMoves.append( (i[1]+1,printCol(i[2])) )
+
+    for i in bMoves:
+        bKingMoves.append( (i[1]+1,printCol(i[2])) )
+    # Just used to check if all the moves were put in
+    print("White Rook Moves:")
+    print('Amount: {}'.format(len(wRookMoves)))
+    for j in wRookMoves:
+        print(j)
+    print("White King Moves:")
+    print('Amount: {}'.format(len(wKingMoves)))
+    for j in wKingMoves:
+        print(j)
+    print("Black King Moves:")
+    print('Amount: {}'.format(len(bKingMoves)))
+    for j in bKingMoves:
+        print(j)
 
     move = minimax(board, turn)
 
