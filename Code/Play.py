@@ -1,8 +1,6 @@
 import sys
 from copy import deepcopy
-
-from Minimax import minimax, min_play, max_play
-# from minimax import heuristicWhite
+from Minimax import minimax
 from Board import Board
 
 GAME_STATES = []

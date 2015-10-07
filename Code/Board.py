@@ -1,7 +1,6 @@
-from Heuristic import Heuristic
-from random import randint
-from string import ascii_uppercase
 import sys
+from Heuristic import Heuristic
+from string import ascii_uppercase
 
 class Board:
 
@@ -145,6 +144,7 @@ class Board:
     def op_color(color):
         return 'black' if color == 'white' else 'white'
 
+    # Display board 
     def __str__(self):
         column_view = '  %s  ' * 8 % tuple( [ ascii_uppercase[c] for c in list(range(8)) ] )
         board_view = "  %s\n" % (column_view,)
@@ -158,9 +158,9 @@ class Board:
                     piece = str(self.squares[Square.position(row, col)].get_square_piece())
                 else:
                     piece = "  "
-                row_view += '| %s ' % (piece,)
+                row_view += '| %s ' % (piece)
 
-            row_view += "| %d\n" % (row + 1,)
+            row_view += "| %d\n" % (row + 1)
             board_view += row_view
             board_view += '  ' + '-' * len(column_view) + "\n"
         board_view += ' ' + column_view
@@ -353,7 +353,7 @@ class Square:
             'row': int(row) - 1
         }
 
-    # Compare if two Square objects are equal (same location)
+    # True if squares in same location else False
     def __eq__(self, other_square):
         return self.row == other_square.row and self.column == other_square.column
 
