@@ -227,9 +227,7 @@ class Board(object):
             my_possible_moves.append((move[1],move[2]))
 
         for move in other_moves:
-            # newBlackMoves.append(move)
             enemy_possible_moves.append((move[1],move[2]))
-        
 
         # Return True if enemy_possible_moves is a subset of my_possible_moves
         for loc, square in self.squares.items():
@@ -329,9 +327,15 @@ class Board(object):
         blackMoves = []
 
         if (color == 'white' and self.newCheckmate('black')) or (color == 'black' and self.newCheckmate('white')):
+            print('\n\n\nCHECKMATE BONUS\n\n\n')
             return 1000000
         elif (color == 'white' and self.newCheckmate('white')) or (color == 'black' and self.newCheckmate('black')):
             return -1000000
+            print('\n\n\nCHECKMATE Alert\n\n\n')
+
+        if self.inCheck(Board.oppositeColor(color)):
+            print('\nCheck bonus!\n')
+            return 1000
 
         positionBonus = 0
 
@@ -340,7 +344,7 @@ class Board(object):
                 piece = square.getPiece()
 
                 # Positional analysis
-                positionBonus = Strategy.squareToValue(square, piece.getColor())
+                positionBonus = Strategy.squareToValue(square, piece.getColor(), self)
 
                 # Number of moves analysis
                 if piece.isColor('white'):
@@ -360,6 +364,15 @@ class Board(object):
 
         # Evaluate the available attacks on the board and give a bonus
         # attackBonus = self.evaluateAttackBonus(color, movesLookup)
+        
+        '''Reward for piece in same row/col'''
+        # active_pieces = []
+        # for loc, square in self.squares.items():
+        #     if square.isOccupied():
+        #         active_pieces.append((square.getRow(), square.getColumn()))
+        # print(active_pieces)
+
+
 
         movesLookup = whiteMoves if color == 'black' else blackMoves
 

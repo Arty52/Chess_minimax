@@ -2,54 +2,8 @@ from Board import Board
 from copy import deepcopy
 import sys
 
-def minimax(board, turn):
-    print('Computing minimax...')
-    
-    """
-    Depth:
-    depth = 1 Max --> return
-    depth = 2 Max --> Mini --> return
-    depth = 3 Max --> Mini --> Max --> return
-    depth = 4 Max --> Mini --> Max --> Mini --> return
-    """
-    depth = 3
-    
-    if turn == 1:
-        color = 'white'
-    else:
-        color = 'black'
-    
-    # Check for checkmate
-    if board.newCheckmate(color):
-        print('CHECKMATE!')
-        print(board)
-        sys.exit()
-    
-    moves = board.legalMoves(color)
-    best_move = moves[0]
-    best_score = float('-inf')
-    alpha = float('-inf')
-    beta = float('inf')
-    
-    for move in moves:
-        clone = deepcopy(board)
-        clone.squares = deepcopy(board.squares)
-        step = deepcopy(move)
-        clone.movePiece(step[0], step[1])
-
-        if color == 'white':
-            score = min_play(clone, depth - 1, turn, alpha, beta)
-        else:
-            score = max_play(clone, depth - 1, turn, alpha, beta)
-            
-        if score > best_score:
-            # print('new best move from minimax: {} to {}'.format(step[0], step[1]))
-            best_move = step
-            best_score = score
-    return best_move
-
 def min_play(board, depth, turn, alpha, beta):
-        
+
     if turn == 1:
         color = 'black'
     else:
@@ -58,7 +12,6 @@ def min_play(board, depth, turn, alpha, beta):
     if depth == 0 or board.newCheckmate(color):
         return board.evaluate(color)
     moves = board.legalMoves(color)
-    best_score = float('inf')
     for move in moves:
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
@@ -75,26 +28,28 @@ def min_play(board, depth, turn, alpha, beta):
 
 def max_play(board, depth, turn, alpha, beta):
     # print('in max_play')
-    
+
     if turn == 1:
         color = 'white'
     else:
         color = 'black'
-    
+
     if depth == 0 or board.newCheckmate(color):
         return board.evaluate(color)
     moves = board.legalMoves(color)
-    best_score = float('-inf')
     for move in moves:
         clone = deepcopy(board)
         clone.squares = deepcopy(board.squares)
         step = deepcopy(move)
         clone.movePiece(step[0], step[1])
+
         score = min_play(clone, depth - 1, turn, alpha, beta)
+
         if score >= beta:
             return beta
         if score > alpha:
             alpha = score
+
     return alpha
 
 

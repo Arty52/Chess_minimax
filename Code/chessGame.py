@@ -1,7 +1,7 @@
 import sys
 from copy import deepcopy
 
-from minimax import minimax
+from minimax import min_play, max_play
 # from minimax import heuristicWhite
 from Board import Board
 
@@ -68,13 +68,13 @@ def playCase(turn):
         board = Board()
         try:
             # Subtract 1 to accomidate indexing
-            print(line)
+            # print(line)
             board.addPiece('white', 'King', int(line[0])-1, int(line[1])-1)
-            print('White king added: ♕  at {}{}'.format(int(line[0]), printCol(int(line[1]-1))))
+            # print('White king added: ♕  at {}{}'.format(int(line[0]), printCol(int(line[1]-1))))
             board.addPiece('white', 'Rook', int(line[2])-1, int(line[3])-1)
-            print('White rook added: ♖  at {}{}'.format(int(line[2]), printCol(int(line[3]-1))))
+            # print('White rook added: ♖  at {}{}'.format(int(line[2]), printCol(int(line[3]-1))))
             board.addPiece('black', 'King', int(line[4])-1, int(line[5])-1)
-            print('Black king added: ♛  at {}{}'.format(int(line[4]), printCol(int(line[5]-1))))
+            # print('Black king added: ♛  at {}{}'.format(int(line[4]), printCol(int(line[5]-1))))
 
         except ValueError:
             print()
@@ -93,80 +93,139 @@ def printCol(colVal):
 
 def solve_game(board, turn):
 
-    print(board)
+    # print(board)
     savedState = board.saveState()
     
-    '''DEEP COPY'''
-    # save = deepcopy(savedState)
-    # print(save)
-     
-    # moves = deepcopy(board.squares)
-    # clone = Board()
-    # clone.squares = moves
-    
     ''' Print all moves possible '''
-    wMoves = board.getLegalMoves('white')
-    bMoves = board.getLegalMoves('black')
-    #print(len(moves))
-
-    #Empty lists for appending moves
-    wRookMoves = []
-    wKingMoves = []
-    bKingMoves = []
-
-    #loop to go through all the legal white piece moves
-    #   appends those moves to the correct list
-    for i in wMoves:
-        #i[x] let's me parse through the tuples within the list
-        if i[0] == 'Rook':
-            wRookMoves.append( (i[1]+1,printCol(i[2])) )
-        elif i[0] == 'King':
-            wKingMoves.append( (i[1]+1,printCol(i[2])) )
-
-    for i in bMoves:
-        bKingMoves.append( (i[1]+1,printCol(i[2])) )
-
+    # wMoves = board.getLegalMoves('white')
+    # bMoves = board.getLegalMoves('black')
+    # #print(len(moves))
+    #
+    # #Empty lists for appending moves
+    # wRookMoves = []
+    # wKingMoves = []
+    # bKingMoves = []
+    #
+    # #loop to go through all the legal white piece moves
+    # #   appends those moves to the correct list
+    # for i in wMoves:
+    #     #i[x] let's me parse through the tuples within the list
+    #     if i[0] == 'Rook':
+    #         wRookMoves.append( (i[1]+1,printCol(i[2])) )
+    #     elif i[0] == 'King':
+    #         wKingMoves.append( (i[1]+1,printCol(i[2])) )
+    #
+    # for i in bMoves:
+    #     bKingMoves.append( (i[1]+1,printCol(i[2])) )
     #Just used to check if all the moves were put in
-    print("White Rook Moves:")
-    print('Amount: {}'.format(len(wRookMoves)))
-    for j in wRookMoves:
-        print(j)
-    print("White King Moves:")
-    print('Amount: {}'.format(len(wKingMoves)))
-    for j in wKingMoves:
-        print(j)
-    print("Black King Moves:")
-    print('Amount: {}'.format(len(bKingMoves)))
-    for j in bKingMoves:
-        print(j)
+    # print("White Rook Moves:")
+    # print('Amount: {}'.format(len(wRookMoves)))
+    # for j in wRookMoves:
+    #     print(j)
+    # print("White King Moves:")
+    # print('Amount: {}'.format(len(wKingMoves)))
+    # for j in wKingMoves:
+    #     print(j)
+    # print("Black King Moves:")
+    # print('Amount: {}'.format(len(bKingMoves)))
+    # for j in bKingMoves:
+    #     print(j)
  
-    '''minimax'''
-    move = minimax(board, turn)
+ 
+ 
+ 
+    ''' 
+    ===============================================
+    ******  Mini-Max with alpha-beta pruning ******
+    ===============================================
+    '''
+    
+    depth = 3
+    
+    print('Computing minimax...')
+    
+    """
+    Depth:
+    depth = 1 Max --> return
+    depth = 2 Max --> Mini --> return
+    depth = 3 Max --> Mini --> Max --> return
+    depth = 4 Max --> Mini --> Max --> Mini --> return
+    """
+    depth = 3
+    
+    # Set turn
+    if turn == 1:
+        color = 'white'
+    else:
+        color = 'black'
+    
+    # Check for checkmate oppenents checkmate
+    if board.newCheckmate(color):
+        print('CHECKMATE! {} beats {}'.format(color, Board.oppositeColor(color)))
+        print(board)
+        sys.exit()
+    
+    # Check for checkmate oppenents checkmate
+    if board.newCheckmate(Board.oppositeColor(color)):
+        print('CHECKMATE! {1} beats {0}'.format(color, Board.oppositeColor(color)))
+        print(board)
+        sys.exit()
+    
+    moves = board.legalMoves(color)
+    best_move = moves[0]
+    best_score = float('-inf')
+    alpha = float('-inf')
+    beta = float('inf')
+    
+    for move in moves:
+        clone = deepcopy(board)
+        clone.squares = deepcopy(board.squares)
+        step = deepcopy(move)
+        clone.movePiece(step[0], step[1])
 
-    # print(board)
-    # print(save)
-    # score, move = heuristicWhite(board, 3, -float("inf"), float("inf"))
+        if color == 'white':
+            # score = min_play(clone, depth - 1, turn)
+            score = min_play(clone, depth - 1, turn, alpha, beta)
+            if score > best_score:
+                best_move = step
+                best_score = score
+                print(best_score)
+        else:
+            # score = max_play(clone, depth - 1, turn)
+            score = max_play(clone, depth - 1, turn, alpha, beta)
+            if score < best_score:
+                best_move = step
+                best_score = score
+                print(best_score)
+    print('best score returned: {}'.format(best_score))
+    
+    move = best_move
+
+    # Restore initial state of the board
     board.restoreState(savedState)
-    # print(savedState)
+    
+    # Display board state before move
+    print('Board before move:')
     print(board)
-    #print board pieces
+    
+    # Attach new configuration to board
     for loc, square in board.squares.items():
-        # if square.isOccupied():
-            # print(square.getPiece(), square.getRow(), square.getColumn())
         '''populate object from board into move'''
         if square.isOccupied() and square == move[0]:
-            # print('match!')
             move[0].assignPiece(square.getPiece())
         if square.isOccupied() and square == move[1]:
             move[1].assignPiece(square.getPiece())
 
-
+    # Display what the move is
     print('Moving from {} to {} '.format(move[0], move[1]))
     board.movePiece(move[0], move[1])
 
+    # Announce check! if black in check
     if board.inCheck('black'):
         print('Black in Check!')
 
+    # Display board state after move
+    print('Board after move:')
     print(board)
     outputBoard(board)
 
@@ -209,18 +268,6 @@ def main():
     else:
         print('Goodbye!')
         quit()
-
-    
-    # while True:
-    #     _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
-    #     if _filehandle != 'quit':
-    #         GAME_STATES = []
-    #         importBoard()
-    #         playCase()
-    #
-    #     else:
-    #         print('Goodbye!')
-    #         break
 
 if __name__ == '__main__':
     main()
