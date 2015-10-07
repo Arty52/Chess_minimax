@@ -31,6 +31,7 @@ class Strategy:
 
         row = square.getRow()
         column = square.getColumn()
+        o_color = 'black' if color == 'white' else 'white'
 
         # Pseudo-mirror array using Python's reverse list lookup
         if color == 'black':
@@ -54,6 +55,10 @@ class Strategy:
         #         #return Strategy.rook[row][bKingLoc[1]+1]+100
         #         #return [x + 10 for x in Strategy.rook[bKingLoc[0]]]
                 
+        if board.inCheck(o_color):
+            return 1000
+        elif board.inCheck(color):
+            return -1000
         if piece.getType() == 'Rook':
             # print(Strategy.rook[row][column])
             return Strategy.rook[row][column]
