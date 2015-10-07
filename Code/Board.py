@@ -1,208 +1,114 @@
+from Heuristic import Heuristic
 from random import randint
-from Square import Square
-from Piece import Piece
-from Strategy import Strategy
+from string import ascii_uppercase
 import sys
 
-class Board(object):
-
-    blackIsInCheckmate = False
-    whiteIsInCheckmate = False
+class Board:
 
     squares = {}
-
-    setup = {}
-
-    capturedPieces = []
-
-    _cacheSquares = []
-    _cacheLocationsUsed = []
-
+    
     def __init__(self):
         for i in range(8):
             for j in range(8):
                 self.squares[Square.position(i, j)] = Square(i, j)
-    
-    """
-    Initial setup. For this assignment we are using just
-    two kings and one rook
-    """
-    def setupRandom(self):
 
-        pieces = {
-            'white': ('King', 'Rook'),
-            'black': ('King',)
-        }
-
-        for color, pieceTypes in pieces.items():
-            for pieceType in pieceTypes:
-                pieceLocation = Square.parsePosition(Board.randomSquare())
-                self.addPiece(color, pieceType, pieceLocation['row'], pieceLocation['col'])
-
-    def clearBoard(self):
+    def clear_board(self):
         for i in range(8):
             for j in range(8):
                 self.squares[Square.position(i, j)] = Square(i, j)
     
     # Save the state of existing, individual pieces on the board
-    def saveState(self):
+    def save_board(self):
         pieces = []
 
         for loc, square in self.squares.items():
-            if square.isOccupied():
-                pieces.append( (loc, square.getPiece()) )
+            if square.square_occupied():
+                pieces.append( (loc, square.get_square_piece()) )
 
         return pieces
 
-    def restoreState(self, savedState):
+    def restore_board(self, savedState):
         
-        self.clearBoard()
+        self.clear_board()
 
         for loc, piece in savedState:
-            pieceLocation = Square.parsePosition(loc)
+            pieceLocation = Square.parse_position(loc)
 
-            self.squares[Square.position(pieceLocation['row'], pieceLocation['col'])].assignPiece(piece)
+            self.squares[Square.position(pieceLocation['row'], pieceLocation['col'])].assign_piece_to_square(piece)
 
-    def cloneBoard(self):
-        # create new board
-        clone = Board()
-
-        print(self)
-        for loc, square in self.squares.items():
-            if square.isOccupied():
-                piece = square.getPiece()
-                print(piece)
-                # clone.addPiece(square.getPiece)
-        
-        # for piece in square
-        # clone.addPiece()
-        # for piece in saveState:
-        #     print(piece)
-        
-        return clone
-
-    def addPiece(self, color, pieceType, row, column):
-        '''
-        Add piece to the board at (row, column)
-        :param color: str
-        :param pieceType: str
-        :param row: int
-        :param column: int
-        :return: None
-        '''
+    def add_piece(self, color, pieceType, row, column):
 
         pieceObject = Piece(type=pieceType, color=color)
-        self.squares[Square.position(row, column)].assignPiece(pieceObject)
+        self.squares[Square.position(row, column)].assign_piece_to_square(pieceObject)
     
-    def movePiece(self, fromSquare, toSquare):
-        '''
-        :type fromSquare: Square
-        :type toSquare: Square
-        :return: None
-        '''
+    def move_piece(self, fromSquare, toSquare):
 
-        piece = fromSquare.getPiece()
+        piece = fromSquare.get_square_piece()
 
         '''If toSquare is occupied, capture piece'''
-        if toSquare.isOccupied() and toSquare.getPiece().isAlive():
-            if toSquare.getPiece().getType() == 'King':
+        if toSquare.square_occupied() and toSquare.get_square_piece().alive():
+            if toSquare.get_square_piece().get_type() == 'King':
                 print()
                 print('King Captured! Game Over')
                 print()
                 for loc, square in self.squares.items():
-                    if square.isOccupied() and square == fromSquare:
-                        square.removePiece()
-                self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
+                    if square.square_occupied() and square == fromSquare:
+                        square.remove_piece_from_square()
+                self.add_piece(piece.get_color(), piece.get_type(), toSquare.get_square_row(), toSquare.get_square_column())
                 print(self)
                 sys.exit()
-            
-            self.capturedPieces.append(toSquare.getPiece())
 
-        piece = fromSquare.getPiece()
-        fromSquare.removePiece()
+        piece = fromSquare.get_square_piece()
+        fromSquare.remove_piece_from_square()
         
         for loc, square in self.squares.items():
-            if square.isOccupied() and square == fromSquare:
-                # print('Occupied:')
-                # print(loc, square)
-                square.removePiece()
-            
-        # toSquare.assignPiece(piece)
-        
-        # Add piece to the board
-        # print('from: {} {}'.format(piece, fromSquare))
-        # print('to: {} {}'.format(piece, toSquare))
-        self.addPiece(piece.getColor(), piece.getType(), toSquare.getRow(), toSquare.getColumn())
+            if square.square_occupied() and square == fromSquare:
+                square.remove_piece_from_square()
 
-    def legalMoves(self, color):
-        '''
-        Generate all legal moves for the specified color.
-        Returns a list of tuples (from, to)
-        :type color: str
-        :return: [(Square, Square)]
-        '''
+        self.add_piece(piece.get_color(), piece.get_type(), toSquare.get_square_row(), toSquare.get_square_column())
+
+    def get_possible_moves(self, color):
 
         moves = []
 
         for loc, square in self.squares.items():
-            if square.isOccupied() and square.getPiece().isAlive() and square.getPiece().isColor(color):
-                for move in square.generateMoves():
+            if square.square_occupied() and square.get_square_piece().alive() and square.get_square_piece().test_color(color):
+                for move in square.generate_moves():
+                    moves.append( (square.get_square_piece().get_type(), move.get_square_row(), move.get_square_column()) )
+
+        return moves
+        
+    def possible_moves(self, color):
+
+        moves = []
+
+        for loc, square in self.squares.items():
+            if square.square_occupied() and square.get_square_piece().alive() and square.get_square_piece().test_color(color):
+                for move in square.generate_moves():
                     ##original return method
                     moves.append( (square, move) )
 
         return moves
 
-    def getLegalMoves(self, color):
-        '''
-        Generate all legal moves for the specified color.
-        Returns a list of tuples (from, to)
-        :type color: str
-        :return: [(Square, Square)]
-        '''
-
-        moves = []
-
+    def get_piece_square(self, color, pieceType):
         for loc, square in self.squares.items():
-            if square.isOccupied() and square.getPiece().isAlive() and square.getPiece().isColor(color):
-                for move in square.generateMoves():
-                    ##original return method
-                    #moves.append( (square, move) )
-
-                    ##method that returns (from row, from column, to row, to column) 
-                    #moves.append( (square.getRow(),square.getColumn(),move.getRow(),move.getColumn()) )
-
-                    ##method that returns (Color, Piece, to row, to column)
-                    #moves.append( (square.getPiece().getColor(),square.getPiece().getType(), move.getRow(), move.getColumn()) )
-
-                    ##method that returns (Piece, to row, to column)
-                    moves.append( (square.getPiece().getType(), move.getRow(), move.getColumn()) )
-
-
-                    ##method that returns (Color, Piece, to row, to column)
-                    #moves.append( (move.getRow(), move.getColumn()) )
-
-        return moves
-
-    # O(n)
-    def getPieceSquare(self, color, pieceType):
-        for loc, square in self.squares.items():
-            if square.isOccupied() and square.getPiece().isColor(color) and square.getPiece().isType(pieceType):
+            if square.square_occupied() and square.get_square_piece().test_color(color) and square.get_square_piece().test_type(pieceType):
                 return square
 
         return None
 
-    def inCheck(self, color):
+    def evaluate_check(self, color):
         otherPlayersSquares = []
 
         for loc, square in self.squares.items():
-            if square.isOccupied() and not square.getPiece().isColor(color):
+            if square.square_occupied() and not square.get_square_piece().test_color(color):
                 otherPlayersSquares.append(square)
 
         otherPlayersMoves = []
         for sq in otherPlayersSquares:
-            otherPlayersMoves += sq.generateMoves()
+            otherPlayersMoves += sq.generate_moves()
 
-        myKing = self.getPieceSquare(color, 'King')
+        myKing = self.get_piece_square(color, 'King')
 
         if not myKing:
             return False
@@ -213,12 +119,9 @@ class Board(object):
 
         return False
 
-    def isDraw(self):
-        return False
-
-    def newCheckmate(self, color):
-        my_moves    = self.getLegalMoves(color)
-        other_moves = self.getLegalMoves(Board.oppositeColor(color))
+    def checkmate(self, color):
+        my_moves    = self.get_possible_moves(color)
+        other_moves = self.get_possible_moves(Board.op_color(color))
 
         my_possible_moves = []
         enemy_possible_moves = []
@@ -231,222 +134,239 @@ class Board(object):
 
         # Return True if enemy_possible_moves is a subset of my_possible_moves
         for loc, square in self.squares.items():
-            if square.isOccupied() and not square.getPiece().isColor(color):
+            if square.square_occupied() and not square.get_square_piece().test_color(color):
                 for my_move in my_possible_moves:
-                    if square.getRow() == my_move[0] and square.getColumn() == my_move[1]:
+                    if square.get_square_row() == my_move[0] and square.get_square_column() == my_move[1]:
                         return set(enemy_possible_moves).issubset(my_possible_moves)
 
         return False
 
-    def isCheckmate(self, color):
-
-        # Perform some caching for multiple checkmate lookups
-        if (color == 'white' and self.whiteIsInCheckmate) or (color == 'black' and self.blackIsInCheckmate):
-            return True
-
-        if not self.inCheck(color):
-            return False
-
-        otherKingSquare = self.getPieceSquare(Board.oppositeColor(color), 'King')
-
-        currentState = self.saveState()
-
-        otherKingsMoves = otherKingSquare.generateMoves()
-
-        stillInCheck = True
-
-        for move in otherKingsMoves:
-            self.movePiece(otherKingSquare, move)
-
-            if not self.inCheck(color):
-                stillInCheck = False
-                if color == 'white':
-                    self.whiteIsInCheckmate = True
-                else:
-                    self.blackIsInCheckmate = True
-
-        # Reset the board to the original state
-        self.restoreState(currentState)
-
-        # If still in check (after checking all available moves), checkmate
-        print('Checkmate? ', stillInCheck)
-        return stillInCheck
-
     @staticmethod
-    def oppositeColor(color):
+    def op_color(color):
         return 'black' if color == 'white' else 'white'
 
     def __str__(self):
-##        return self.getPieceSquare('white','King')
-##        return self.getPieceSquare('white','Rook')
-##        return self.getPieceSquare('black','King')
-
-        columnDisplay = '  %s  ' * 8 % tuple( [ Square.indexColumn(c) for c in list(range(8)) ] )
-        boardDisplay = "  %s\n" % (columnDisplay,)
-        boardDisplay += '  ' + '-' * len(columnDisplay) + "\n"
+        column_view = '  %s  ' * 8 % tuple( [ ascii_uppercase[c] for c in list(range(8)) ] )
+        board_view = "  %s\n" % (column_view,)
+        board_view += '  ' + '-' * len(column_view) + "\n"
         
         for row in range(7, -1, -1):
-            rowDisplay = str(row + 1)
+            row_view = str(row + 1)
             
             for col in range(8):
-                if self.squares[Square.position(row, col)].isOccupied():
-                    piece = str(self.squares[Square.position(row, col)].getPiece())
+                if self.squares[Square.position(row, col)].square_occupied():
+                    piece = str(self.squares[Square.position(row, col)].get_square_piece())
                 else:
                     piece = "  "
-                rowDisplay += '| %s ' % (piece,)
+                row_view += '| %s ' % (piece,)
 
-            rowDisplay += "| %d\n" % (row + 1,)
-            boardDisplay += rowDisplay
-            boardDisplay += '  ' + '-' * len(columnDisplay) + "\n"
-        boardDisplay += ' ' + columnDisplay
+            row_view += "| %d\n" % (row + 1,)
+            board_view += row_view
+            board_view += '  ' + '-' * len(column_view) + "\n"
+        board_view += ' ' + column_view
         
-        return boardDisplay
+        return board_view
 
-    '''
-    Formula developed by Claud Shannon 1949, modified for this assignment
-    f(p) = 20000(K-K')
-           + 900(Q-Q')
-           + 500(R-R')
-           + 300(B-B' + N-N')
-           + 100(P-P')
-           - 50(D-D' + S-S' + I-I')
-           + 10(M-M') + ...
-     
-    KQRBNP = number of kings, queens, rooks, bishops, knights and pawns
-    D,S,I = doubled, blocked and isolated pawns
-    M = Mobility (the number of legal moves)
-    '''
+    def evaluate_move(self, color):
 
-    def evaluate(self, color):
-
-        whiteKing = 1
-        whiteRook = 1
-        blackKing = 1
-
-        whiteMoves = []
-        blackMoves = []
-
-        if (color == 'white' and self.newCheckmate('black')) or (color == 'black' and self.newCheckmate('white')):
+        if (color == 'white' and self.checkmate('black')) or (color == 'black' and self.checkmate('black')):
             # print('\n\n\nCHECKMATE BONUS\n\n\n')
-            return 1000000
-        elif (color == 'white' and self.newCheckmate('white')) or (color == 'black' and self.newCheckmate('black')):
+            return 10000
+        elif (color == 'white' and self.checkmate('white')) or (color == 'black' and self.checkmate('white')):
             # print('\n\n\nCHECKMATE Alert\n\n\n')
-            return -1000000
+            return -10000
+        
+        # If able to check, reward square. If in check, add cost
+        if self.evaluate_check(Board.op_color(color)):
+            return 1000
 
-        if self.inCheck(Board.oppositeColor(color)):
-            # print('\nCheck bonus!\n')
-            return 1000 if color == 'white' else -1000
-            
+        heuristic_bonus = 0
 
-        positionBonus = 0
+        white_moves = []
+        black_moves = []
 
         for loc, square in self.squares.items():
-            if square.isOccupied() and square.getPiece().isAlive():
-                piece = square.getPiece()
+            if square.square_occupied() and square.get_square_piece().alive():
+                piece = square.get_square_piece()
 
                 # Positional analysis
-                positionBonus = Strategy.squareToValue(square, piece.getColor(), self)
+                heuristic_bonus = Heuristic.square_value(square, piece.get_color(), self)
 
                 # Number of moves analysis
-                if piece.isColor('white'):
-                    whiteMoves += square.generateMoves()
+                if piece.test_color('white'):
+                    white_moves += square.generate_moves()
                 else:
-                    blackMoves += square.generateMoves()
+                    black_moves += square.generate_moves()
 
-        # Capture Analysis
-        for piece in self.capturedPieces:
-            if piece.isType('King'):
-                if piece.isColor('white'):
-                    whiteKing = 0
-                else:
-                    blackKing = 0
-            elif piece.isType('Rook') and piece.isColor('white'):
-                whiteRook = 0
+        total = 10 * (len(white_moves) - len(black_moves))
 
-        # Evaluate the available attacks on the board and give a bonus
-        # attackBonus = self.evaluateAttackBonus(color, movesLookup)
-        
-        '''Reward for piece in same row/col'''
-        # active_pieces = []
-        # for loc, square in self.squares.items():
-        #     if square.isOccupied():
-        #         active_pieces.append((square.getRow(), square.getColumn()))
-        # print(active_pieces)
-
-
-
-        movesLookup = whiteMoves if color == 'black' else blackMoves
-
-        # Evaluate the pieces under attack and subtract points for those positions
-        # underAttack = self.evaluateUnderAttack(color, movesLookup)
-
-        total = 20000 * (whiteKing - blackKing)
-        total += 500 * (whiteRook) # No black rook exists
-        total += 10 * (len(whiteMoves) - len(blackMoves))
-
-        total += positionBonus
-        # total += self.evaluateAttackBonus(color, movesLookup)
-        # total += self.evaluateUnderAttack(color, movesLookup)
-
-        # print('Evaluation of move = ' + str(total))
+        total += heuristic_bonus
 
         return total
 
-    def evaluateAttackBonus(self, color, moves):
+class Piece:
 
-        attackBonus = 0
+    # White or black
+    color = None
 
-        # King Attack
-        kingLocation = self.getPieceSquare(Board.oppositeColor(color), 'King')
-        print(color)
-        print(kingLocation)
+    # King or Rook
+    type = None
 
-        # Rook Attack
-        rookLocation = self.getPieceSquare(Board.oppositeColor(color), 'Rook')
-        print(rookLocation)
+    # Is the piece still alive or dead?
+    alive = True
 
-        for move in moves:
-            print(move)
+    def alive(self):
+        return self.alive
 
-            if move == kingLocation:
-                attackBonus += Strategy.ATTACK_KING_BONUS
+    def get_type(self):
+        return self.type
 
-            if move == rookLocation:
-                attackBonus += Strategy.ATTACK_ROOK_BONUS
+    def get_color(self):
+        return self.color
 
-        return attackBonus
+    def test_type(self, test):
+        return self.type == test
 
-    def evaluateUnderAttack(self, color, moves):
+    def test_color(self, testColor):
+        return self.color == testColor
 
-        underAttack = 0
+    def __init__(self, **kwargs):
+        self.type = kwargs['type']
+        self.color = kwargs['color']
 
-        # Under Attack
-        kingLocation = self.getPieceSquare(color, 'King')
-        rookLocation = self.getPieceSquare(color, 'Rook')
+    def __str__(self):
+        if self.color == 'black':
+            if self.type == 'King':
+                return '♛ '
+        elif self.color == 'white':
+            if self.type == 'King':
+                return '♕ '
+            elif self.type == 'Rook':
+                return '♖ '
+        
+        # Return descriptive piece
+        return self.color[0].lower() + self.type[0].upper()
 
-        for move in moves:
+class Square:
+    
+    def __init__(self, *args, **kwargs):
+        self.MAX_ROW = 7
+        self.MAX_COL = 7
+        self.MIN_ROW = 0
+        self.MIN_COL = 0
 
-            if move == kingLocation:
-                underAttack -= Strategy.ATTACK_KING_BONUS
+        self.row = 0
+        self.column = 0
+        self.occupied = False
+        self.Piece = None
 
-            if move == rookLocation:
-                underAttack -= Strategy.ATTACK_ROOK_BONUS
+        if len(args) == 2:
+            self.row = args[0]
+            self.column = args[1]
+        else:
+            positionParts = Square.parse_position(args[0])
+            self.row = positionParts['row']
+            self.column = positionParts['col']
 
-        return underAttack
+    def get_square_row(self):
+        return self.row
+
+    def get_square_column(self):
+        return self.column
+
+    def square_occupied(self):
+        return self.occupied
+
+    def remove_piece_from_square(self):
+        self.occupied = False
+
+        self.Piece = None
+
+    def assign_piece_to_square(self, piece):
+        if piece is None:
+            self.occupied = False
+        else:
+            self.occupied = True
+
+        self.Piece = piece
+
+    def get_square_piece(self):
+        return self.Piece
+
+    def generate_moves(self):
+
+        moves = []
+
+        if self.Piece.type == 'Rook':
+            
+            # All possible row moves
+            for i in range(self.MAX_ROW+1):
+                if i is not self.row:
+                    moves.append(Square(i, self.column))
+
+            # All possible column moves
+            for i in range(self.MAX_COL+1):
+                if i is not self.column:
+                    moves.append(Square(self.row, i))
+
+        elif self.Piece.type == 'King':
+
+            # Make sure we're still in bounds
+            if self.row - 1 >= self.MIN_ROW:
+
+                newRow = self.row - 1
+
+                for i in range(self.column - 1, self.column + 2):
+                    if i >= self.MIN_COL and i <= self.MAX_COL:
+                        moves.append(Square(newRow, i))
+
+            # All possible row moves
+            for i in range(self.column - 1, self.column + 2):
+                if i >= self.MIN_COL and i <= self.MAX_COL and i is not self.column:
+                    moves.append(Square(self.row, i))
+
+            # All possible column moves
+            if self.row + 1 <= self.MAX_ROW:
+
+                newRow = self.row + 1
+
+                for i in range(self.column - 1, self.column + 2):
+                    if i >= self.MIN_COL and i <= self.MAX_COL:
+                        moves.append(Square(newRow, i))
+
+        return moves
 
     @staticmethod
-    def randomSquare():
+    def position(row, column):
+        return ascii_uppercase[int(column)] + str(int(row) + 1)
 
-        # Only generate the squares once since this operation is O(n^2)
-        if not Board._cacheSquares:
-            cols = ("A", "B", "C", "D", "E", "F", "G", "H")
-            rows = range(8)
+    @staticmethod
+    def parse_position(position_discription):
+        if len(position_discription) is not 2:
+            raise Exception('Invalid position specified')
 
-            for col in range(len(cols)):
-                for row in rows:
-                    Board._cacheSquares.append(cols[col] + str(row + 1))
+        col = position_discription[0]
+        row = position_discription[1]
 
-        location = Board._cacheSquares[randint(0, len(Board._cacheSquares) - 1)]
-        Board._cacheSquares.remove(location)
+        return {
+            'col': ("A", "B", "C", "D", "E", "F", "G", "H").index(col),
+            'row': int(row) - 1
+        }
 
-        return location
+    # Compare if two Square objects are equal (same location)
+    def __eq__(self, other_square):
+        return self.row == other_square.row and self.column == other_square.column
+
+    def __str__(self):
+        if self.Piece is None:
+            piece = ""
+        else:
+            piece = str(self.Piece)
+
+        properties = {
+            'piece'  : piece,
+            'row'    : self.row + 1,
+            'column' : ascii_uppercase[self.column],
+        }
+
+        return '%(piece)s(%(column)s%(row)d)' % properties
