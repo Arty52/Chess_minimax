@@ -327,15 +327,16 @@ class Board(object):
         blackMoves = []
 
         if (color == 'white' and self.newCheckmate('black')) or (color == 'black' and self.newCheckmate('white')):
-            print('\n\n\nCHECKMATE BONUS\n\n\n')
+            # print('\n\n\nCHECKMATE BONUS\n\n\n')
             return 1000000
         elif (color == 'white' and self.newCheckmate('white')) or (color == 'black' and self.newCheckmate('black')):
+            # print('\n\n\nCHECKMATE Alert\n\n\n')
             return -1000000
-            print('\n\n\nCHECKMATE Alert\n\n\n')
 
         if self.inCheck(Board.oppositeColor(color)):
-            print('\nCheck bonus!\n')
-            return 1000
+            # print('\nCheck bonus!\n')
+            return 1000 if color == 'white' else -1000
+            
 
         positionBonus = 0
 

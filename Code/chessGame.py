@@ -1,7 +1,7 @@
 import sys
 from copy import deepcopy
 
-from minimax import min_play, max_play
+from minimax import minimax, min_play, max_play
 # from minimax import heuristicWhite
 from Board import Board
 
@@ -134,72 +134,79 @@ def solve_game(board, turn):
  
  
  
-    ''' 
-    ===============================================
-    ******  Mini-Max with alpha-beta pruning ******
-    ===============================================
-    '''
+    # '''
+    # ===============================================
+    # ******  Mini-Max with alpha-beta pruning ******
+    # ===============================================
+    # '''
+    #
+    # depth = 3
+    #
+    # print('Computing minimax...')
+    #
+    # """
+    # Depth:
+    # depth = 1 Max --> return
+    # depth = 2 Max --> Mini --> return
+    # depth = 3 Max --> Mini --> Max --> return
+    # depth = 4 Max --> Mini --> Max --> Mini --> return
+    # """
+    # depth = 3
+    #
+    # # Set turn
+    # if turn == 1:
+    #     color = 'white'
+    # else:
+    #     color = 'black'
+    #
+    # # Check for checkmate oppenents checkmate
+    # if board.newCheckmate(color):
+    #     print('CHECKMATE! {} beats {}'.format(color, Board.oppositeColor(color)))
+    #     print(board)
+    #     sys.exit()
+    #
+    # # Check for checkmate oppenents checkmate
+    # if board.newCheckmate(Board.oppositeColor(color)):
+    #     print('CHECKMATE! {1} beats {0}'.format(color, Board.oppositeColor(color)))
+    #     print(board)
+    #     sys.exit()
+    #
+    # # Get possible legal moves
+    # moves = board.legalMoves(color)
+    # best_move = moves[0]
+    #
+    # # Initialize variables
+    # best_score = float('-inf')
+    # alpha = float('-inf')
+    # beta = float('inf')
+    #
+    # for move in moves:
+    #     clone = deepcopy(board)
+    #     clone.squares = deepcopy(board.squares)
+    #     step = deepcopy(move)
+    #     clone.movePiece(step[0], step[1])
+    #
+    #     if color == 'white':
+    #         # score = min_play(clone, depth - 1, turn)
+    #         score = min_play(clone, depth - 1, turn, alpha, beta)
+    #         if score > best_score:
+    #             best_move = step
+    #             best_score = score
+    #             print(best_score)
+    #     else:
+    #         # score = max_play(clone, depth - 1, turn)
+    #         score = max_play(clone, depth - 1, turn, alpha, beta)
+    #         if score < best_score:
+    #             best_move = step
+    #             best_score = score
+    #             print(best_score)
+    #
+    #
+    # print('best score returned: {}'.format(best_score))
+    #
+    # move = best_move
     
-    depth = 3
-    
-    print('Computing minimax...')
-    
-    """
-    Depth:
-    depth = 1 Max --> return
-    depth = 2 Max --> Mini --> return
-    depth = 3 Max --> Mini --> Max --> return
-    depth = 4 Max --> Mini --> Max --> Mini --> return
-    """
-    depth = 3
-    
-    # Set turn
-    if turn == 1:
-        color = 'white'
-    else:
-        color = 'black'
-    
-    # Check for checkmate oppenents checkmate
-    if board.newCheckmate(color):
-        print('CHECKMATE! {} beats {}'.format(color, Board.oppositeColor(color)))
-        print(board)
-        sys.exit()
-    
-    # Check for checkmate oppenents checkmate
-    if board.newCheckmate(Board.oppositeColor(color)):
-        print('CHECKMATE! {1} beats {0}'.format(color, Board.oppositeColor(color)))
-        print(board)
-        sys.exit()
-    
-    moves = board.legalMoves(color)
-    best_move = moves[0]
-    best_score = float('-inf')
-    alpha = float('-inf')
-    beta = float('inf')
-    
-    for move in moves:
-        clone = deepcopy(board)
-        clone.squares = deepcopy(board.squares)
-        step = deepcopy(move)
-        clone.movePiece(step[0], step[1])
-
-        if color == 'white':
-            # score = min_play(clone, depth - 1, turn)
-            score = min_play(clone, depth - 1, turn, alpha, beta)
-            if score > best_score:
-                best_move = step
-                best_score = score
-                print(best_score)
-        else:
-            # score = max_play(clone, depth - 1, turn)
-            score = max_play(clone, depth - 1, turn, alpha, beta)
-            if score < best_score:
-                best_move = step
-                best_score = score
-                print(best_score)
-    print('best score returned: {}'.format(best_score))
-    
-    move = best_move
+    move = minimax(board, turn)
 
     # Restore initial state of the board
     board.restoreState(savedState)
