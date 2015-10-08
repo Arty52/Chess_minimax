@@ -68,10 +68,10 @@ def output_board(board):
 
 def assign_turn(turn):
     if turn == 1:
-        print('------------------------BLACK MOVE------------------------')
+        print('------------------------PLAYER Y MOVE------------------------')
         return 0
     elif turn == 0:
-        print('------------------------WHITE MOVE------------------------')
+        print('------------------------PLAYER X MOVE------------------------')
         return 1
 
 def play_case(turn):

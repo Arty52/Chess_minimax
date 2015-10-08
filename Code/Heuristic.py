@@ -33,6 +33,11 @@ class Heuristic:
         # If evaluated position in check, award bonus/cost
         if board.evaluate_check(color):
             return 1000
+        #
+        # if piece.get_type() == 'Rook':
+        #     return Heuristic.rook[row][column]
+        # elif piece.get_type() == 'King':
+        #     return Heuristic.king[row][column]
 
         # White heuristic awards bonus to objects position
         if color == 'white':
