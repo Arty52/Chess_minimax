@@ -255,7 +255,7 @@ def main():
         move_number = 1
 
         # _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
-        print('...running testcase.txt')
+        print('...running testCase.txt')
         _filehandle = 'testCase.txt'
 
         game_count = 1
@@ -280,7 +280,7 @@ def main():
         else:
             turn = 1
 
-        number_of_moves = input('How many moves do you want to simulate (moves are done as pairs)? ')
+        number_of_moves = input('How many moves do you want to simulate? ')
         number_of_moves = int(number_of_moves)
         move_number = 1
 
