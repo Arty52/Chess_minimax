@@ -28,12 +28,34 @@ def minimax(board, turn):
     
     # Check for checkmate oppenents checkmate
     if board.checkmate(color):
+        output_board_file = open('gameResult.txt', 'w')
+        
+        if color == 'black':
+            print('STALEMATE! {} beats {}'.format(color, Board.op_color(color)), file = output_board_file)
+            print(board, file = output_board_file)
+            print('STALEMATE! {} beats {}'.format(color, Board.op_color(color)))
+            print(board)
+            sys.exit()
+        
+        print('CHECKMATE! {} beats {}'.format(color, Board.op_color(color)), file = output_board_file)
+        print(board, file = output_board_file)
         print('CHECKMATE! {} beats {}'.format(color, Board.op_color(color)))
         print(board)
         sys.exit()
     
     # Check for checkmate oppenents checkmate
     if board.checkmate(Board.op_color(color)):
+        output_board_file = open('gameResult.txt', 'w')
+
+        if color == 'white':
+            print('STALEMATE! {1} beats {0}'.format(color, Board.op_color(color)), file = output_board_file)
+            print(board, file = output_board_file)
+            print('STALEMATE! {1} beats {0}'.format(color, Board.op_color(color)))
+            print(board)
+            sys.exit()
+            
+        print('CHECKMATE! {1} beats {0}'.format(color, Board.op_color(color)), file = output_board_file)
+        print(board, file = output_board_file)
         print('CHECKMATE! {1} beats {0}'.format(color, Board.op_color(color)))
         print(board)
         sys.exit()
@@ -53,15 +75,15 @@ def minimax(board, turn):
         clone.move_piece(step[0], step[1])
 
         if color == 'white':
-            # score = min_play(clone, depth - 1, turn)
-            score = min_play(clone, depth - 1, turn, alpha, beta)
+            # score = heuristicY(clone, depth - 1, turn)
+            score = heuristicY(clone, depth - 1, turn, alpha, beta)
             if score > best_score:
                 best_move = step
                 best_score = score
                 # print(best_score)
         else:
-            # score = max_play(clone, depth - 1, turn)
-            score = max_play(clone, depth - 1, turn, alpha, beta)
+            # score = heuristicX(clone, depth - 1, turn)
+            score = heuristicX(clone, depth - 1, turn, alpha, beta)
             if score < best_score:
                 best_move = step
                 best_score = score
@@ -69,7 +91,7 @@ def minimax(board, turn):
 
     return best_move
 
-def min_play(board, depth, turn, alpha, beta):
+def heuristicY(board, depth, turn, alpha, beta):
 
     if turn == 1:
         color = 'black'
@@ -88,7 +110,7 @@ def min_play(board, depth, turn, alpha, beta):
         clone.squares = deepcopy(board.squares)
         step = deepcopy(move)
         clone.move_piece(step[0], step[1])
-        score = max_play(clone, depth - 1, turn, alpha, beta)
+        score = heuristicX(clone, depth - 1, turn, alpha, beta)
 
         if score <= alpha:
             return alpha
@@ -97,7 +119,7 @@ def min_play(board, depth, turn, alpha, beta):
 
     return beta
 
-def max_play(board, depth, turn, alpha, beta):
+def heuristicX(board, depth, turn, alpha, beta):
     if turn == 1:
         color = 'white'
     else:
@@ -116,7 +138,7 @@ def max_play(board, depth, turn, alpha, beta):
         step = deepcopy(move)
         clone.move_piece(step[0], step[1])
 
-        score = min_play(clone, depth - 1, turn, alpha, beta)
+        score = heuristicY(clone, depth - 1, turn, alpha, beta)
 
         if score >= beta:
             return beta

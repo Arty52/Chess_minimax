@@ -25,6 +25,7 @@ def import_board():
 def output_board(board):
     # Open file so that we can write to it. This will create a new file if DNE
     output_file_handle = open(_filehandle, 'w')
+    output_board_file = open('gameResult.txt', 'w')
 
     white_king = None
     white_rook = None
@@ -58,6 +59,10 @@ def output_board(board):
     # Print piece positions to file
     output_file_handle.write(board_configuration)  #uncomment up above
     
+    print(board, file = output_board_file)
+    print('\nBoard configuration: ', file = output_board_file)
+    output_board_file.write(board_configuration)
+    
     # print('The next board configuration has been stored to {} in the working directory.'.format(output_file_handle))
     # output_file_handle.close()
 
@@ -81,8 +86,8 @@ def play_case(turn):
             # print('White rook added: ♖  at {}{}'.format(int(line[2]), print_column(int(line[3]-1))))
             board.add_piece('black', 'King', int(line[4])-1, int(line[5])-1)
             # print('Black king added: ♛  at {}{}'.format(int(line[4]), print_column(int(line[5]-1))))
-            print('Loaded Board: ')
-            print(board)
+            # print('Loaded Board: ')
+            # print(board)
 
         except ValueError:
             print()
@@ -95,9 +100,9 @@ def play_case(turn):
         # sys.exit()      #run only once
 
 # Takes column value and returns column letter
-def print_column(colVal):
+def print_column(column_value):
     cols = ("A", "B", "C", "D", "E", "F", "G", "H")
-    return cols[colVal]
+    return cols[column_value]
 
 def solve_game(board, turn):
 
@@ -171,34 +176,96 @@ def solve_game(board, turn):
     print('Board after move:')
     print(board)
     output_board(board)
-
-def main():
-    global _filehandle
-    global GAME_STATES
-
-    print('Welcome to Art and Adam\'s minimax chess AI!')
-    print()
     
+def test_case():
+    global _filehandle
+    turn = 0
+    
+    number_of_moves = input('How many moves do you want to simulate (moves are done as pairs)? ')
+    number_of_moves = int(number_of_moves)
+    move_number = 1
+
+    # _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+    print('...running testcase.txt')
+    _filehandle = 'testCase.txt'
+
+    game_count = 1
+    while number_of_moves != 0:
+        GAME_STATES = []
+        import_board()
+    
+        turn = assign_turn(turn)
+        play_case(turn)
+        print('move number {}'.format(move_number))
+        game_count += 1
+        if game_count % 2:
+            number_of_moves -= 1
+            move_number += 1
+    print('File printed to gameResult.txt \nGoodbye.')
+    sys.exit()
+
+def play_opponent():
+    global _filehandle
     side = input('Which player would you like to go first (x - white or y - black)? ')
     if side == 'x':
         turn = 0
     else:
         turn = 1
-    
-    number_of_moves = input('How many moves do you want to simulate (moves are done as pairs)? ')
+
+    number_of_moves = input('How many moves do you want to simulate? ')
     number_of_moves = int(number_of_moves)
     move_number = 1
-    
-    # _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
-    print('...running testcase.txt')
-    _filehandle = 'testcase.txt'
-    
-    game_count = 1
+
+    _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+    print('running {}'.format(_filehandle))
+
     if _filehandle != 'quit':
         while number_of_moves != 0:
             GAME_STATES = []
             import_board()
-            
+    
+            turn = assign_turn(turn)
+            play_case(turn)
+            print('move number {}'.format(move_number))
+            number_of_moves -= 1
+            move_number += 1
+    else:
+        print('Until next time, Goodbye!')
+
+    sys.exit()
+
+def main():
+    global _filehandle
+    global GAME_STATES
+
+    print('\nWelcome to Art and Adam\'s minimax chess AI!\n')
+    
+    # Question (a)
+    while True:
+        test = input('Is this a test (y/n)? ').lower()
+        if test == 'y' or test == 'n':
+            break
+    
+    if test == 'y':
+        # set White/Player X to go first
+        # test_case()
+
+        turn = 0
+        
+        # Question (b)
+        number_of_moves = input('How many moves do you want to simulate (moves are done as pairs)? ')
+        number_of_moves = int(number_of_moves)
+        move_number = 1
+
+        # _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+        print('...running testcase.txt')
+        _filehandle = 'testCase.txt'
+
+        game_count = 1
+        while number_of_moves != 0:
+            GAME_STATES = []
+            import_board()
+
             turn = assign_turn(turn)
             play_case(turn)
             print('move number {}'.format(move_number))
@@ -206,9 +273,36 @@ def main():
             if game_count % 2:
                 number_of_moves -= 1
                 move_number += 1
+        print('File printed to gameResult.txt \nGoodbye.')
+        sys.exit()
+        
     else:
-        print('Goodbye!')
-        quit()
+        # play_opponent()
+        side = input('Which player would you like to go first (x - white or y - black)? ')
+        if side == 'x':
+            turn = 0
+        else:
+            turn = 1
+
+        number_of_moves = input('How many moves do you want to simulate (moves are done as pairs)? ')
+        number_of_moves = int(number_of_moves)
+        move_number = 1
+
+        _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
+        print('running {}'.format(_filehandle))
+
+        if _filehandle != 'quit':
+            while number_of_moves != 0:
+                GAME_STATES = []
+                import_board()
+
+                turn = assign_turn(turn)
+                play_case(turn)
+                print('move number {}'.format(move_number))
+                number_of_moves -= 1
+                move_number += 1
+        else:
+            print('Goodbye!')
 
 if __name__ == '__main__':
     main()

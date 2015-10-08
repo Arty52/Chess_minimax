@@ -2,6 +2,20 @@ import sys
 from Heuristic import Heuristic
 from string import ascii_uppercase
 
+'''
+===================================================================================
+Board Class:
+-Initializes an empty board state
+-Adds all the pieces into the correct spots
+-Displays the Board
+-Can tell us all possible moves
+-Can tell if the board state is in checkmate
+-Made by 8x8 Square objects
+-Moves Piece objects into the Square objects
+-Helps evaluate the moves
+
+===================================================================================
+'''
 class Board:
 
     squares = {}
@@ -40,31 +54,51 @@ class Board:
         pieceObject = Piece(type=pieceType, color=color)
         self.squares[Square.position(row, column)].assign_piece_to_square(pieceObject)
     
-    def move_piece(self, fromSquare, toSquare):
+    def move_piece(self, current_square, next_square):
 
-        piece = fromSquare.get_square_piece()
+        piece = current_square.get_square_piece()
 
-        '''If toSquare is occupied, capture piece'''
-        if toSquare.square_occupied() and toSquare.get_square_piece().alive():
-            if toSquare.get_square_piece().get_type() == 'King':
+        '''If next_square is occupied, capture piece'''
+        if next_square.square_occupied() and next_square.get_square_piece().alive():
+            
+            # Capture black king
+            if next_square.get_square_piece().get_type() == 'King' and next_square.get_square_piece().get_color() == 'black':
+                output_board_file = open('gameResult.txt', 'w')
                 print()
-                print('King Captured! Game Over')
+                print('Black King Captured! Game Over')
+                print('\nBlack King Captured! Game Over\n\n', file = output_board_file)
+                print(self, file = output_board_file)
                 print()
                 for loc, square in self.squares.items():
-                    if square.square_occupied() and square == fromSquare:
+                    if square.square_occupied() and square == current_square:
                         square.remove_piece_from_square()
-                self.add_piece(piece.get_color(), piece.get_type(), toSquare.get_square_row(), toSquare.get_square_column())
+                self.add_piece(piece.get_color(), piece.get_type(), next_square.get_square_row(), next_square.get_square_column())
                 print(self)
                 sys.exit()
 
-        piece = fromSquare.get_square_piece()
-        fromSquare.remove_piece_from_square()
+            # Capture white king
+            if next_square.get_square_piece().get_type() == 'King' and next_square.get_square_piece().get_color() == 'white' and current_square.get_square_piece().get_color() == 'black':
+                output_board_file = open('gameResult.txt', 'w')
+                print()
+                print('White King Captured! Game Over')
+                print('\nWhite King Captured! Game Over\n\n', file = output_board_file)
+                print(self, file = output_board_file)
+                print()
+                for loc, square in self.squares.items():
+                    if square.square_occupied() and square == current_square:
+                        square.remove_piece_from_square()
+                self.add_piece(piece.get_color(), piece.get_type(), next_square.get_square_row(), next_square.get_square_column())
+                print(self)
+                sys.exit()
+
+        piece = current_square.get_square_piece()
+        current_square.remove_piece_from_square()
         
         for loc, square in self.squares.items():
-            if square.square_occupied() and square == fromSquare:
+            if square.square_occupied() and square == current_square:
                 square.remove_piece_from_square()
 
-        self.add_piece(piece.get_color(), piece.get_type(), toSquare.get_square_row(), toSquare.get_square_column())
+        self.add_piece(piece.get_color(), piece.get_type(), next_square.get_square_row(), next_square.get_square_column())
 
     def get_possible_moves(self, color):
 
@@ -132,11 +166,15 @@ class Board:
             enemy_possible_moves.append((move[1],move[2]))
 
         # Return True if enemy_possible_moves is a subset of my_possible_moves
+
         for loc, square in self.squares.items():
             if square.square_occupied() and not square.get_square_piece().test_color(color):
                 for my_move in my_possible_moves:
                     if square.get_square_row() == my_move[0] and square.get_square_column() == my_move[1]:
-                        return set(enemy_possible_moves).issubset(my_possible_moves)
+                        if color == 'white':
+                            return set(enemy_possible_moves).issubset(my_possible_moves)
+                        else:
+                            return set(my_possible_moves).issubset(enemy_possible_moves)
 
         return False
 
@@ -149,10 +187,10 @@ class Board:
         column_view = '  %s  ' * 8 % tuple( [ ascii_uppercase[c] for c in list(range(8)) ] )
         board_view = "  %s\n" % (column_view,)
         board_view += '  ' + '-' * len(column_view) + "\n"
-        
+
         for row in range(7, -1, -1):
             row_view = str(row + 1)
-            
+
             for col in range(8):
                 if self.squares[Square.position(row, col)].square_occupied():
                     piece = str(self.squares[Square.position(row, col)].get_square_piece())
@@ -163,8 +201,9 @@ class Board:
             row_view += "| %d\n" % (row + 1)
             board_view += row_view
             board_view += '  ' + '-' * len(column_view) + "\n"
+
         board_view += ' ' + column_view
-        
+
         return board_view
 
     def evaluate_move(self, color):
@@ -204,6 +243,14 @@ class Board:
 
         return total
 
+'''
+===================================================================================
+Piece Class:
+-Each piece object has a color, type, and can tell us whether or not it is alive
+-A piece can be one of three different pieces (white Rook, white King, black King)
+
+===================================================================================
+'''
 class Piece:
 
     # White or black
@@ -247,6 +294,18 @@ class Piece:
         # Return descriptive piece
         return self.color[0].lower() + self.type[0].upper()
 
+'''
+===================================================================================
+Square Class:
+-Part of the board
+-Holds the piece object
+-Can tell us the row and column a piece is at
+-Generates all possible moves and feeds them back to the Board class
+-Can tell us if a square is empty or not
+-Can assign/remove pieces to squares
+
+===================================================================================
+'''
 class Square:
     
     def __init__(self, *args, **kwargs):
