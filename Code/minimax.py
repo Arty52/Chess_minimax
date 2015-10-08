@@ -8,6 +8,9 @@ import sys
 ===============================================
 '''
 
+#Input: a board object, and a turn variable, that is either 1 or 0
+#Output: returns the best move for the team
+#Purpose: Calls heuristicX, and heuristicY to determine what the best move
 def minimax(board, turn):
     """
     Depth:
@@ -91,6 +94,9 @@ def minimax(board, turn):
 
     return best_move
 
+#Input: a board object, a depth counter variable, a turn variable (either a 1 or a 0), an alpha value, and a beta value
+#Output: A beta value
+#Purpose: used to find the min value for a move
 def heuristicY(board, depth, turn, alpha, beta):
 
     if turn == 1:
@@ -119,6 +125,9 @@ def heuristicY(board, depth, turn, alpha, beta):
 
     return beta
 
+#Input: a board object, a depth counter variable, a turn variable (either a 1 or a 0), an alpha value, and a beta value
+#Output: An alpha value
+#Purpose: used to find the max value for a move
 def heuristicX(board, depth, turn, alpha, beta):
     if turn == 1:
         color = 'white'

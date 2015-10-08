@@ -6,6 +6,9 @@ from Board import Board
 GAME_STATES = []
 _filehandle = None
 
+#Input: N/A
+#Output: A message telling the user if the board was imported
+#Purpose: To import the board from a text file
 def import_board():    
     try:
         with open(_filehandle) as fh:
@@ -22,6 +25,9 @@ def import_board():
         print('Your file was not found!')
         print()
 
+#Input: a board object
+#Output: The board with the pieces on it, outputs both the configuration and the board to a file
+#Purpose: To Print the board and board configuratin to the terminal and a file
 def output_board(board):
     # Open file so that we can write to it. This will create a new file if DNE
     output_file_handle = open(_filehandle, 'w')
@@ -66,6 +72,9 @@ def output_board(board):
     # print('The next board configuration has been stored to {} in the working directory.'.format(output_file_handle))
     # output_file_handle.close()
 
+#Input: A single bit variable, either a 1 or a 0
+#Output: Tells user whoevers turn it is, and returns a number according to whoever's turn it is
+#Purpose: Allows the program to change between who gets to move their piece
 def assign_turn(turn):
     if turn == 1:
         print('------------------------PLAYER Y MOVE------------------------')
@@ -74,6 +83,9 @@ def assign_turn(turn):
         print('------------------------PLAYER X MOVE------------------------')
         return 1
 
+#Input: A single bit variable, either a 1 or a 0
+#Output: The board configuration, with the piece next to its position on the board
+#Purpose: To initialize the board object, and the pieces contained on the board
 def play_case(turn):
     for line in GAME_STATES:
         board = Board()
@@ -99,54 +111,22 @@ def play_case(turn):
         solve_game(board, turn)
         # sys.exit()      #run only once
 
-# Takes column value and returns column letter
+#Input: A number relative to the column on a chess board
+#Output: Returns a letter relative to the column on a chess board
+#Purpose: So the program can print real chess board locations, e.g. A5
 def print_column(column_value):
     cols = ("A", "B", "C", "D", "E", "F", "G", "H")
     return cols[column_value]
 
+#Input: A board object
+#Output: Prints the board before and after moving a piece
+#Purpose: Calls the minimax algorithm to help decide on a move, then moves the piece
 def solve_game(board, turn):
 
-    # print(board)
+    # Save current state of the board before preceding to computation
     saved_state = board.save_board()
-    
-    ''' Print all moves possible '''
-    # wMoves = board.get_possible_moves('white')
-    # bMoves = board.get_possible_moves('black')
-    # #print(len(moves))
-    #
-    # #Empty lists for appending moves
-    # wRookMoves = []
-    # wKingMoves = []
-    # bKingMoves = []
-    #
-    # #loop to go through all the legal white piece moves
-    # #   appends those moves to the correct list
-    # for i in wMoves:
-    #     #i[x] let's me parse through the tuples within the list
-    #     if i[0] == 'Rook':
-    #         wRookMoves.append( (i[1]+1,print_column(i[2])) )
-    #     elif i[0] == 'King':
-    #         wKingMoves.append( (i[1]+1,print_column(i[2])) )
-    #
-    # for i in bMoves:
-    #     bKingMoves.append( (i[1]+1,print_column(i[2])) )
-    # # Just used to check if all the moves were put in
-    # print("White Rook Moves:")
-    # print('Amount: {}'.format(len(wRookMoves)))
-    # for j in wRookMoves:
-    #     print(j)
-    # print("White King Moves:")
-    # print('Amount: {}'.format(len(wKingMoves)))
-    # for j in wKingMoves:
-    #     print(j)
-    # print("Black King Moves:")
-    # print('Amount: {}'.format(len(bKingMoves)))
-    # for j in bKingMoves:
-    #     print(j)
 
-    '''
-    Call Minimax with alpha-beta pruning
-    '''
+    # Call Minimax with alpha-beta pruning
     move = minimax(board, turn)
 
     # Restore initial state of the board
@@ -176,61 +156,10 @@ def solve_game(board, turn):
     print('Board after move:')
     print(board)
     output_board(board)
-    
-def test_case():
-    global _filehandle
-    turn = 0
-    
-    number_of_moves = input('How many moves do you want to simulate (moves are done as pairs)? ')
-    number_of_moves = int(number_of_moves)
-    move_number = 1
 
-    # _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
-    print('...running testcase.txt')
-    _filehandle = 'testCase.txt'
-
-    game_count = 1
-    while number_of_moves != 0:
-        GAME_STATES = []
-        import_board()
-    
-        turn = assign_turn(turn)
-        play_case(turn)
-        print('move number {}'.format(move_number))
-        game_count += 1
-        if game_count % 2:
-            number_of_moves -= 1
-            move_number += 1
-    print('File printed to gameResult.txt \nGoodbye.')
-
-def play_opponent():
-    global _filehandle
-    side = input('Which player would you like to go first (x - white or y - black)? ')
-    if side == 'x':
-        turn = 0
-    else:
-        turn = 1
-
-    number_of_moves = input('How many moves do you want to simulate? ')
-    number_of_moves = int(number_of_moves)
-    move_number = 1
-
-    _filehandle = input('Enter file you would like to open (type "quit" to exit): ')
-    print('running {}'.format(_filehandle))
-
-    if _filehandle != 'quit':
-        while number_of_moves != 0:
-            GAME_STATES = []
-            import_board()
-    
-            turn = assign_turn(turn)
-            play_case(turn)
-            print('move number {}'.format(move_number))
-            number_of_moves -= 1
-            move_number += 1
-    else:
-        print('Until next time, Goodbye!')
-
+#Input: User inputs if they are running a test case or not, the number of moves to simulate, which player goes first, and the file to read from
+#Output: Prints how many moves have been done
+#Purpose: Prepares the program to run either a test case or general case, if requested to
 def main():
     global _filehandle
     global GAME_STATES
@@ -243,9 +172,8 @@ def main():
         if test == 'y' or test == 'n':
             break
     
+    # Is a test
     if test == 'y':
-        # test_case()
-
         # Set White/Player X to go first
         turn = 0
         
@@ -271,9 +199,9 @@ def main():
                 number_of_moves -= 1
                 move_number += 1
         print('File printed to gameResult.txt \nGoodbye.')
-        
+    
+    # Play Opponent
     else:
-        # play_opponent()
         side = input('Which player would you like to go first (x - white or y - black)? ')
         if side == 'x':
             turn = 0
