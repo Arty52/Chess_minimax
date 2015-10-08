@@ -244,9 +244,9 @@ def main():
             break
     
     if test == 'y':
-        # set White/Player X to go first
         # test_case()
 
+        # Set White/Player X to go first
         turn = 0
         
         # Question (b)
