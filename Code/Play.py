@@ -202,7 +202,6 @@ def test_case():
             number_of_moves -= 1
             move_number += 1
     print('File printed to gameResult.txt \nGoodbye.')
-    sys.exit()
 
 def play_opponent():
     global _filehandle
@@ -231,8 +230,6 @@ def play_opponent():
             move_number += 1
     else:
         print('Until next time, Goodbye!')
-
-    sys.exit()
 
 def main():
     global _filehandle
@@ -274,7 +271,6 @@ def main():
                 number_of_moves -= 1
                 move_number += 1
         print('File printed to gameResult.txt \nGoodbye.')
-        sys.exit()
         
     else:
         # play_opponent()
